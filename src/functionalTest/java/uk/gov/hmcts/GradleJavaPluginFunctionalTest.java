@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 /**
  * A simple functional test for the 'uk.gov.hmcts.greeting' plugin.
  */
-public class GradleJavaPluginPluginFunctionalTest {
+public class GradleJavaPluginFunctionalTest {
     @Test public void canRunTask() throws IOException {
         // Setup the test build
         File projectDir = new File("build/functionalTest");
@@ -24,19 +24,19 @@ public class GradleJavaPluginPluginFunctionalTest {
         writeString(new File(projectDir, "settings.gradle"), "");
         writeString(new File(projectDir, "build.gradle"),
             "plugins {" +
-            "  id('uk.gov.hmcts.greeting')" +
+            "  id('uk.gov.hmcts.java')" +
             "}");
 
         // Run the build
         GradleRunner runner = GradleRunner.create();
         runner.forwardOutput();
         runner.withPluginClasspath();
-        runner.withArguments("greeting");
+        runner.withArguments("dependencyCheckAnalyze");
         runner.withProjectDir(projectDir);
         BuildResult result = runner.build();
 
         // Verify the result
-        assertTrue(result.getOutput().contains("Hello from plugin 'uk.gov.hmcts.greeting'"));
+        assertTrue(result.getOutput().contains("Found 0 vulnerabilities"));
     }
 
     private void writeString(File file, String string) throws IOException {

@@ -11,11 +11,11 @@ import static org.junit.Assert.*;
 /**
  * A simple unit test for the 'uk.gov.hmcts.greeting' plugin.
  */
-public class GradleJavaPluginPluginTest {
+public class GradleJavaPluginTest {
     @Test public void pluginRegistersATask() {
         // Create a test project and apply the plugin
         Project project = ProjectBuilder.builder().build();
-        project.getPlugins().apply("uk.gov.hmcts.greeting");
+        project.getPlugins().apply("uk.gov.hmcts.java");
 
         // Verify the result
         assertNotNull(project.getTasks().findByName("greeting"));

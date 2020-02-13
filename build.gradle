@@ -18,16 +18,22 @@ repositories {
 }
 
 dependencies {
+    compile 'org.owasp:dependency-check-gradle:5.3.0'
     // Use JUnit test framework for unit tests
     testImplementation 'junit:junit:4.12'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 gradlePlugin {
     // Define the plugin
     plugins {
         greeting {
-            id = 'uk.gov.hmcts.greeting'
-            implementationClass = 'uk.gov.hmcts.GradleJavaPluginPlugin'
+            id = 'uk.gov.hmcts.java'
+            implementationClass = 'uk.gov.hmcts.GradleJavaPlugin'
         }
     }
 }

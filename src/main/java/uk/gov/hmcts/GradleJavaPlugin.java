@@ -5,12 +5,14 @@ package uk.gov.hmcts;
 
 import org.gradle.api.Project;
 import org.gradle.api.Plugin;
+import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
 
 /**
  * A simple 'hello world' plugin.
  */
-public class GradleJavaPluginPlugin implements Plugin<Project> {
+public class GradleJavaPlugin implements Plugin<Project> {
     public void apply(Project project) {
+        project.getPlugins().apply(DependencyCheckPlugin.class);
         // Register a task
         project.getTasks().register("greeting", task -> {
             task.doLast(s -> System.out.println("Hello from plugin 'uk.gov.hmcts.greeting'"));
