@@ -1,5 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '0.10.1'
 }
 
 repositories {
@@ -19,12 +20,23 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+compileJava {
+    options.compilerArgs += ["-Werror"]
+}
+
+def version = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
+
+group 'uk.gov.hmcts.reform'
+project.version version
+
 gradlePlugin {
     // Define the plugin
     plugins {
         greeting {
             id = 'uk.gov.hmcts.java'
             implementationClass = 'uk.gov.hmcts.JavaPlugin'
+            displayName = 'HMCTS Java standards plugin'
+            description = 'Applies HMCTS Java coding standards'
         }
     }
 }
@@ -48,3 +60,12 @@ check {
     // Run the functional tests as part of `check`
     dependsOn(tasks.functionalTest)
 }
+
+pluginBundle {
+    website = 'https://github.com/hmcts/gradle-java-plugin'
+    vcsUrl = 'https://github.com/hmcts/gradle-java-plugin'
+    tags = ['hmcts']
+}
+
+ext['gradle.publish.key'] = System.getenv('GRADLE_PLUGIN_PORTAL_KEY')
+ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
