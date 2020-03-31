@@ -1,0 +1,24 @@
+name: Java CI
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Build
+      run: ./gradlew check -i
+    - name: Release
+      env:
+        GRADLE_PLUGIN_PORTAL_KEY: ${{ secrets.GRADLE_PLUGIN_PORTAL_KEY }}
+        GRADLE_PLUGIN_PORTAL_SECRET: ${{ secrets.GRADLE_PLUGIN_PORTAL_SECRET }}
+        RELEASE_VERSION: ${{ github.ref }}
+      run: ./gradlew publishPlugins
+      if: startsWith(github.ref, 'refs/tags')
