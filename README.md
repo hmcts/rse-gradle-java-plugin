@@ -1,4 +1,5 @@
-# Gradle Java Plugin
+# HMCTS Gradle Java Plugin ![Java CI](https://github.com/hmcts/gradle-java-plugin/workflows/Java%20CI/badge.svg)
+
 
 This plugin assists applying HMCTS standards to Java projects.
 
