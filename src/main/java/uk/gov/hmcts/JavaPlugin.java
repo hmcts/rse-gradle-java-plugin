@@ -34,24 +34,25 @@ public class JavaPlugin implements Plugin<Project> {
         ext.setMaxWarnings(0);
         ext.setMaxErrors(0);
         ext.setIgnoreFailures(false);
-        project.afterEvaluate(x -> {
-            File dir = project.file(".config/checkstyle");
-            dir.mkdirs();
-            File checkstyleConfig = new File(dir, "checkstyle.xml");
-            writeCheckstyleConfig(checkstyleConfig);
+        project.afterEvaluate(evaluatedProject -> {
+            File checkstyleConfig = writeCheckstyleConfig(evaluatedProject);
 
-            for (Checkstyle checkstyle : project.getTasks().withType(Checkstyle.class)) {
+            for (Checkstyle checkstyle : evaluatedProject.getTasks().withType(Checkstyle.class)) {
                 checkstyle.setConfigFile(checkstyleConfig);
             }
         });
     }
 
     @SneakyThrows
-    private void writeCheckstyleConfig(File f) {
+    private File writeCheckstyleConfig(Project project) {
+        File dir = new File(project.getBuildDir(), "config/checkstyle");
+        dir.mkdirs();
+        File checkstyleConfig = new File(dir, "checkstyle.xml");
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("hmcts-checkstyle.xml")) {
             Scanner s = new Scanner(is).useDelimiter("\\A");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(checkstyleConfig))) {
                 writer.write(s.next());
+                return checkstyleConfig;
             }
         }
     }
