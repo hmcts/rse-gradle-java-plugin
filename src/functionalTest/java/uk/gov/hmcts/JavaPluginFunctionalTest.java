@@ -5,31 +5,24 @@ package uk.gov.hmcts;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import org.gradle.testkit.runner.GradleRunner;
 import org.gradle.testkit.runner.BuildResult;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
-/**
- * A simple functional test for the 'uk.gov.hmcts.greeting' plugin.
- */
 public class JavaPluginFunctionalTest {
     @Test public void canRunTask() throws IOException {
-        // Setup the test build
         File projectDir = new File("test-projects/test-library");
         Files.createDirectories(projectDir.toPath());
 
-        // Run the build
         GradleRunner runner = GradleRunner.create()
             .forwardOutput()
             .withPluginClasspath()
-            .withArguments("checkstyleMain", "-is", "--rerun-tasks")
+            .withArguments("check", "-is", "--rerun-tasks")
             .withProjectDir(projectDir);
-        BuildResult result = runner.build();
+        BuildResult result = runner.buildAndFail();
 
-        assertTrue(result.getOutput().contains("Checkstyle files with violations: 1"));
+        assertThat(result.getOutput()).contains("Checkstyle files with violations: 1");
     }
 }
