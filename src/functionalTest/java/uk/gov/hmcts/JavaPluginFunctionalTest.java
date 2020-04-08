@@ -24,15 +24,27 @@ public class JavaPluginFunctionalTest {
         FileUtils.copyDirectory(testLibrary, tempFolder.getRoot());
     }
 
-    @Test public void canRunTask() {
-        GradleRunner runner = GradleRunner.create()
-                                          .forwardOutput()
-                                          .withPluginClasspath()
-                                          .withArguments("check", "-is", "--rerun-tasks")
-                                          .withGradleVersion("4.10.3")
-                                          .withProjectDir(tempFolder.getRoot());
-        BuildResult result = runner.buildAndFail();
+    @Test
+    public void canRunCheckstyle() {
+        BuildResult result = runner()
+            .withArguments("checkStyleMain", "-is")
+            .buildAndFail();
 
         assertThat(result.getOutput()).contains("Checkstyle files with violations: 1");
+    }
+
+    @Test
+    public void canRunPmd() {
+        runner()
+            .withArguments("pmdMain", "-is")
+            .build();
+    }
+
+    GradleRunner runner() {
+        return GradleRunner.create()
+            .forwardOutput()
+            .withPluginClasspath()
+            .withGradleVersion("4.10.3")
+            .withProjectDir(tempFolder.getRoot());
     }
 }
