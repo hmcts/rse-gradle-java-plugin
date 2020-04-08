@@ -64,6 +64,8 @@
   </rule>
   <rule ref="category/java/errorprone.xml">
     <exclude name="BeanMembersShouldSerialize"/>
+    <!--https://sourceforge.net/p/pmd/bugs/1383/-->
+    <exclude name="DataflowAnomalyAnalysis"/>
   </rule>
   <rule ref="category/java/multithreading.xml"/>
   <rule ref="category/java/performance.xml"/>
