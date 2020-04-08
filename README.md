@@ -19,3 +19,14 @@ Checkstyle is automatically applied and configured to use the HMCTS styleguide.
 
 If you need access to the checkstyle.xml file, eg. for configuring an IDE, it is extracted into a
  .config folder in your project root.
+
+## Exemptions
+
+Checkstyle can be selectively disabled for a block using comment tags:
+
+```java
+    //CHECKSTYLE:OFF
+    private String Violating_STYLEGUIDE_lIterAL = "bar";
+    //CHECKSTYLE:ON
+```
+
