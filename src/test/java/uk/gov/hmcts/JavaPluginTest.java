@@ -1,12 +1,12 @@
 package uk.gov.hmcts;
 
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
 
 public class JavaPluginTest {
     @Ignore
@@ -15,6 +15,8 @@ public class JavaPluginTest {
         Project project = ProjectBuilder.builder().build();
         project.getPlugins().apply("uk.gov.hmcts.java");
 
-        assertNotNull(project.getTasks().findByName("checkstyleMain"));
+        assertThat(project.getTasks().findByName("checkstyleMain"))
+            .isNotNull();
+
     }
 }
