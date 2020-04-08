@@ -9,11 +9,12 @@ repositories {
 }
 
 dependencies {
-    compile 'org.owasp:dependency-check-gradle:5.3.0'
     compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
+    testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
+
 
     testImplementation 'junit:junit:4.12'
 }
