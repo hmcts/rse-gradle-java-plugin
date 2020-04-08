@@ -10,12 +10,14 @@ import org.gradle.api.tasks.TaskAction;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Scanner;
 import javax.inject.Inject;
 
 public class CheckstyleSetup extends DefaultTask {
+
+    File configFile;
 
     public static void apply(Project project) {
         project.getPlugins().apply(CheckstylePlugin.class);
@@ -40,10 +42,9 @@ public class CheckstyleSetup extends DefaultTask {
         }
     }
 
-    File configFile;
-
     @Inject
     public CheckstyleSetup() {
+        super();
         File dir = new File(getProject().getBuildDir(), "config/checkstyle");
         configFile = new File(dir, "checkstyle.xml");
     }
@@ -52,10 +53,12 @@ public class CheckstyleSetup extends DefaultTask {
     @SneakyThrows
     public void writeConfig() {
         configFile.getParentFile().mkdirs();
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("hmcts-checkstyle.xml")) {
-            Scanner s = new Scanner(is).useDelimiter("\\A");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
-                writer.write(s.next());
+        try (InputStream is = Thread.currentThread().getContextClassLoader()
+            .getResourceAsStream("hmcts-checkstyle.xml")) {
+            try (Scanner s = new Scanner(is).useDelimiter("\\A")) {
+                try (BufferedWriter writer = Files.newBufferedWriter(configFile.toPath())) {
+                    writer.write(s.next());
+                }
             }
         }
     }
