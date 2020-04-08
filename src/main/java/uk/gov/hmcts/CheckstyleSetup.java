@@ -33,8 +33,10 @@ public class CheckstyleSetup extends DefaultTask {
             CheckstyleSetup.class);
 
         for (Checkstyle checkstyleTask : project.getTasks().withType(Checkstyle.class)) {
-            checkstyleTask.setConfigFile(writer.configFile);
-            checkstyleTask.dependsOn(writer);
+            if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
+                checkstyleTask.setConfigFile(writer.configFile);
+                checkstyleTask.dependsOn(writer);
+            }
         }
     }
 
