@@ -1,25 +1,36 @@
 package uk.gov.hmcts;
 
+import org.apache.commons.io.FileUtils;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JavaPluginFunctionalTest {
-    @Test public void canRunTask() throws IOException {
-        File projectDir = new File("test-projects/test-library");
-        Files.createDirectories(projectDir.toPath());
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
+    @Before
+    public void before() throws IOException {
+        File testLibrary = new File("test-projects/test-library");
+        System.out.println(testLibrary.getAbsolutePath());
+        FileUtils.copyDirectory(testLibrary, tempFolder.getRoot());
+    }
+
+    @Test public void canRunTask() {
         GradleRunner runner = GradleRunner.create()
-            .forwardOutput()
-            .withPluginClasspath()
-            .withArguments("check", "-is", "--rerun-tasks")
-            .withProjectDir(projectDir);
+                                          .forwardOutput()
+                                          .withPluginClasspath()
+                                          .withArguments("check", "-is", "--rerun-tasks")
+                                          .withGradleVersion("4.10.3")
+                                          .withProjectDir(tempFolder.getRoot());
         BuildResult result = runner.buildAndFail();
 
         assertThat(result.getOutput()).contains("Checkstyle files with violations: 1");
