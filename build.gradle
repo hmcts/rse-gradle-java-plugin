@@ -72,3 +72,4 @@ pluginBundle {
 
 ext['gradle.publish.key'] = System.getenv('GRADLE_PLUGIN_PORTAL_KEY')
 ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
+

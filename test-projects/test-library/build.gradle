@@ -34,3 +34,7 @@ sourceSets {
     }
 }
 
+
+checkstyle {
+    maxWarnings = 100
+}
