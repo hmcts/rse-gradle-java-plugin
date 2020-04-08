@@ -20,7 +20,6 @@ public class JavaPluginFunctionalTest {
     @Before
     public void before() throws IOException {
         File testLibrary = new File("test-projects/test-library");
-        System.out.println(testLibrary.getAbsolutePath());
         FileUtils.copyDirectory(testLibrary, tempFolder.getRoot());
     }
 
@@ -28,16 +27,18 @@ public class JavaPluginFunctionalTest {
     public void canRunCheckstyle() {
         BuildResult result = runner()
             .withArguments("checkStyleMain", "-is")
-            .buildAndFail();
+            .build();
 
-        assertThat(result.getOutput()).contains("Checkstyle files with violations: 1");
+        assertThat(result.getOutput()).contains("Running Checkstyle");
     }
 
     @Test
     public void canRunPmd() {
-        runner()
+        BuildResult result = runner()
             .withArguments("pmdMain", "-is")
             .build();
+
+        assertThat(result.getOutput()).contains("pmd");
     }
 
     GradleRunner runner() {

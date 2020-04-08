@@ -3,8 +3,8 @@ package uk.gov.hmcts;
 import javax.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,6 +17,9 @@ import org.gradle.api.plugins.quality.PmdPlugin;
 import org.gradle.api.tasks.TaskAction;
 
 public class PmdSetup extends DefaultTask {
+
+    File configFile;
+
     public static void apply(Project project) {
         project.getPlugins().apply(PmdPlugin.class);
         PmdExtension pmd = project.getExtensions().getByType(PmdExtension.class);
@@ -45,10 +48,9 @@ public class PmdSetup extends DefaultTask {
         }
     }
 
-    File configFile;
-
     @Inject
     public PmdSetup() {
+        super();
         File dir = new File(getProject().getBuildDir(), "config/pmd");
         configFile = new File(dir, "ruleset.xml");
     }
@@ -57,10 +59,11 @@ public class PmdSetup extends DefaultTask {
     @SneakyThrows
     public void writeConfig() {
         configFile.getParentFile().mkdirs();
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("pmd-ruleset.xml")) {
-            Scanner s = new Scanner(is).useDelimiter("\\A");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(configFile))) {
-                writer.write(s.next());
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("pmd-ruleset.xml")) {
+            try (Scanner s = new Scanner(is).useDelimiter("\\A")) {
+                try (BufferedWriter writer = Files.newBufferedWriter(configFile.toPath())) {
+                    writer.write(s.next());
+                }
             }
         }
     }
