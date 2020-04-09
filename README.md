@@ -42,5 +42,5 @@ private String Violating_STYLEGUIDE_lIterAL = "bar";
 
 ## PMD
 
-PMD is applied with the follwing [ruleset](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/pmd-ruleset.xml).
+PMD is applied with the following [ruleset](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/pmd-ruleset.xml).
 
