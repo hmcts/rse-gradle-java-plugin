@@ -23,7 +23,7 @@ checkstyle {
 }
 ```
 
-## Checkstyle
+## [Checkstyle](https://checkstyle.org/checks.html)
 
 Checkstyle is automatically applied and configured to use the [HMCTS styleguide](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/hmcts-checkstyle.xml).
 
@@ -40,7 +40,14 @@ private String Violating_STYLEGUIDE_lIterAL = "bar";
 //CHECKSTYLE:ON
 ```
 
-## PMD
+## [PMD](https://pmd.github.io/pmd-6.22.0/)
 
 PMD is applied with the following [ruleset](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/pmd-ruleset.xml).
+
+
+## [OWASP Dependency Checker](https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/index.html)
+
+Provides monitoring of the project's dependencies and creates a report of known vulnerable components that are included in the build.
+
+To run it execute `gradle dependencyCheckAnalyze`.
 

@@ -16,6 +16,9 @@ repositories {
 }
 
 dependencies {
+    // Known to have a CVE that should be detected by dependency checker.
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.0'
+
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }

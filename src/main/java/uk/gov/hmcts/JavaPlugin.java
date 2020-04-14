@@ -9,5 +9,6 @@ public class JavaPlugin implements Plugin<Project> {
     public void apply(Project project) {
         CheckstyleSetup.apply(project);
         PmdSetup.apply(project);
+        DependencyCheckSetup.apply(project);
     }
 }
