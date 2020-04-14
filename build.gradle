@@ -1,5 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
+    id 'groovy'
     id 'com.gradle.plugin-publish' version '0.11.0'
     id "uk.gov.hmcts.java" version "0.3.1"
 }
@@ -9,17 +10,15 @@ repositories {
 }
 
 dependencies {
-    compile 'org.owasp:dependency-check-gradle:5.3.2.1'
+    implementation 'org.owasp:dependency-check-gradle:5.3.2.1'
     compileOnly 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
-    testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
-    testCompile group: 'com.google.guava', name: 'guava', version: '28.2-jre'
+    testImplementation 'org.codehaus.groovy:groovy-all:2.5.10'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    testImplementation group: 'com.google.guava', name: 'guava', version: '28.2-jre'
 
-
-
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
 }
 
 java {
@@ -52,20 +51,29 @@ gradlePlugin {
 sourceSets {
     functionalTest {
     }
+    integrationTest {
+    }
 }
 
-gradlePlugin.testSourceSets(sourceSets.functionalTest)
+gradlePlugin.testSourceSets(sourceSets.functionalTest, sourceSets.integrationTest)
 configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+configurations.integrationTestImplementation.extendsFrom(configurations.testImplementation)
 
-// Add a task to run the functional tests
 task functionalTest(type: Test) {
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
 }
 
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+functionalTest.mustRunAfter(integrationTest)
+
 check {
     // Run the functional tests as part of `check`
-    dependsOn(tasks.functionalTest)
+    dependsOn(tasks.functionalTest, tasks.integrationTest)
 }
 
 pluginBundle {
