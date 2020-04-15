@@ -52,7 +52,7 @@ public class PmdSetup extends DefaultTask {
     public PmdSetup() {
         super();
         File dir = new File(getProject().getBuildDir(), "config/pmd");
-        configFile = new File(dir, "ruleset.xml");
+        configFile = new File(dir, "pmd-ruleset.xml");
     }
 
     @TaskAction
