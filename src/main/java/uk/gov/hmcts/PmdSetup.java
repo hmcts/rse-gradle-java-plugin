@@ -28,7 +28,6 @@ public class PmdSetup extends DefaultTask {
         pmd.setIgnoreFailures(false);
         // https://github.com/pmd/pmd/issues/876
         pmd.setRuleSets(new ArrayList<>());
-        pmd.setConsoleOutput(true);
 
         project.afterEvaluate(PmdSetup::configurePmd);
     }

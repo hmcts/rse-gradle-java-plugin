@@ -51,6 +51,38 @@ class IntegrationTest extends Specification {
        result.output.contains("pmd")
     }
 
+    def "Dependency check excludes known non-runtime configurations"() {
+        given:
+        buildFile << """
+            plugins {
+                id 'java-library'
+                id 'uk.gov.hmcts.java'
+            }
+            configurations {
+                integrationTest {
+                }
+                functionalTest {
+                }
+                smokeTest {
+                }
+            }
+        """
+        when:
+        // Expect build failure or success depending on provided Gradle property.
+        def result = runner("dependencyCheckAnalyze")
+                .build()
+
+        then:
+        result.output =~ "Analyzing.+:compile"
+        result.output =~ "Analyzing.+:runtime"
+        !(result.output =~ "Analyzing.+:integrationTest")
+        !(result.output =~ "Analyzing.+:functionalTest")
+        !(result.output =~ "Analyzing.+:smokeTest")
+        !(result.output =~ "Analyzing.+:pmd")
+        !(result.output =~ "Analyzing.+:checkstyle")
+        !(result.output =~ "Analyzing.+:compileOnly")
+    }
+
     def "Dependency check can fail build"(args, buildResult) {
         given:
         buildFile << """
@@ -68,7 +100,7 @@ class IntegrationTest extends Specification {
             }
         """
         when:
-        // Expect build failure or success
+        // Expect build failure or success depending on provided Gradle property.
         def result = runner((["dependencyCheckAnalyze"] + args) as String[])
             ."$buildResult"()
 
