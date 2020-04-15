@@ -1,12 +1,24 @@
 package uk.gov.hmcts;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.gradle.api.Project;
 import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
 
 final class DependencyCheckSetup {
+    static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
+        "checkstyle",
+        "compileOnly",
+        "pmd",
+        "integrationTest",
+        "functionalTest",
+        "smokeTest");
+
+    static final List<String> VARIANTS = Arrays
+        .asList("Compile", "CompileClasspath", "CompileOnly", "Runtime", "RuntimeClasspath");
+
     private DependencyCheckSetup() {
     }
 
@@ -24,14 +36,12 @@ final class DependencyCheckSetup {
         // Disable scanning of .NET related binaries
         extension.getAnalyzers().setAssemblyEnabled(false);
 
-        // Exclude scanning of these known non-runtime dependency sets.
-        extension.setSkipConfigurations(Arrays.asList(
-            "checkstyle",
-            "compileOnly",
-            "pmd",
-            "integrationTest",
-            "functionalTest",
-            "smokeTest"
-        ));
+        List<String> skip = extension.getSkipConfigurations();
+        skip.addAll(NON_RUNTIME_CONFIGURATIONS);
+        for (String configuration : NON_RUNTIME_CONFIGURATIONS) {
+            for (String variant : VARIANTS) {
+                skip.add(configuration + variant);
+            }
+        }
     }
 }

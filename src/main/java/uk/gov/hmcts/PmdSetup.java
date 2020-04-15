@@ -35,16 +35,14 @@ public class PmdSetup extends DefaultTask {
     // This must be done after Gradle's initialisation phase
     // since it requires PMD's tasks to have been created based on source sets.
     private static void configurePmd(Project project) {
-        PmdSetup writer = project.getTasks().create("writePMDConfig",
-            PmdSetup.class);
-
         PmdExtension pmd = project.getExtensions().getByType(PmdExtension.class);
         if (pmd.getRuleSets().isEmpty()) {
+            PmdSetup writer = project.getTasks().create("writePMDConfig",
+                PmdSetup.class);
             pmd.ruleSetFiles(writer.configFile);
-        }
-
-        for (Pmd pmdTask : project.getTasks().withType(Pmd.class)) {
-            pmdTask.dependsOn(writer);
+            for (Pmd pmdTask : project.getTasks().withType(Pmd.class)) {
+                pmdTask.dependsOn(writer);
+            }
         }
     }
 
