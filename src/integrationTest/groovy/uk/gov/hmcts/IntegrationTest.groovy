@@ -8,11 +8,11 @@ import spock.lang.Specification
 
 class IntegrationTest extends Specification {
     @Rule
-    TemporaryFolder tempFolder = new TemporaryFolder()
+    TemporaryFolder projectFolder = new TemporaryFolder()
     File buildFile
 
     void setup() {
-        buildFile = tempFolder.newFile('build.gradle')
+        buildFile = projectFolder.newFile('build.gradle')
     }
 
     def "Can run checkstyle"() {
@@ -121,6 +121,6 @@ class IntegrationTest extends Specification {
             .withPluginClasspath()
             .withArguments(arguments)
             .withGradleVersion("4.10.3")
-            .withProjectDir(tempFolder.getRoot())
+            .withProjectDir(projectFolder.getRoot())
     }
 }
