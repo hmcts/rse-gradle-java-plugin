@@ -8,11 +8,11 @@ import spock.lang.Specification
 
 class IntegrationTest extends Specification {
     @Rule
-    TemporaryFolder tempFolder = new TemporaryFolder()
+    TemporaryFolder projectFolder = new TemporaryFolder()
     File buildFile
 
     void setup() {
-        buildFile = tempFolder.newFile('build.gradle')
+        buildFile = projectFolder.newFile('build.gradle')
     }
 
     def "Can run checkstyle"() {
@@ -35,20 +35,36 @@ class IntegrationTest extends Specification {
         result.output.contains("Task :checkstyleFunctionalTest NO-SOURCE")
     }
 
-   def  "Can run PMD"() {
-       given:
-       buildFile << """
+    def  "PMD added to 'check' for each HMCTS configuration"() {
+        given:
+        buildFile << """
             plugins {
                 id 'java-library'
                 id 'uk.gov.hmcts.java'
             }
+            sourceSets {
+                integrationTest {
+                }
+                functionalTest {
+                }
+                smokeTest {
+                }
+            }
         """
-       when:
-        def result = runner("pmdMain")
-            .build()
+        when:
+        def tasks = runner("check")
+                .build()
+                .getTasks()
+                .collect { it.path }
 
        then:
-       result.output.contains("pmd")
+       tasks.containsAll([
+              ":pmdMain",
+              ":pmdTest",
+              ":pmdFunctionalTest",
+              ":pmdIntegrationTest",
+              ":pmdSmokeTest"
+       ])
     }
 
     def "Dependency check excludes known non-runtime configurations"() {
@@ -58,7 +74,7 @@ class IntegrationTest extends Specification {
                 id 'java-library'
                 id 'uk.gov.hmcts.java'
             }
-            configurations {
+            sourceSets {
                 integrationTest {
                 }
                 functionalTest {
@@ -73,14 +89,14 @@ class IntegrationTest extends Specification {
                 .build()
 
         then:
-        result.output =~ "Analyzing.+:compile"
-        result.output =~ "Analyzing.+:runtime"
-        !(result.output =~ "Analyzing.+:integrationTest")
-        !(result.output =~ "Analyzing.+:functionalTest")
-        !(result.output =~ "Analyzing.+:smokeTest")
-        !(result.output =~ "Analyzing.+:pmd")
-        !(result.output =~ "Analyzing.+:checkstyle")
-        !(result.output =~ "Analyzing.+:compileOnly")
+        result.output =~ "Analyzing.+:compile\\s"
+        result.output =~ "Analyzing.+:runtime\\s"
+        !(result.output =~ "Analyzing.+:integrationTest\\s")
+        !(result.output =~ "Analyzing.+:functionalTest\\s")
+        !(result.output =~ "Analyzing.+:smokeTest\\s")
+        !(result.output =~ "Analyzing.+:pmd\\s")
+        !(result.output =~ "Analyzing.+:checkstyle\\s")
+        !(result.output =~ "Analyzing.+:compileOnly\\s")
     }
 
     def "Dependency check can fail build"(args, buildResult) {
@@ -121,6 +137,6 @@ class IntegrationTest extends Specification {
             .withPluginClasspath()
             .withArguments(arguments)
             .withGradleVersion("4.10.3")
-            .withProjectDir(tempFolder.getRoot())
+            .withProjectDir(projectFolder.getRoot())
     }
 }
