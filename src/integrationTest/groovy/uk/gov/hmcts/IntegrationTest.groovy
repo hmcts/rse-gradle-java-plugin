@@ -2,6 +2,7 @@ package uk.gov.hmcts
 
 import com.google.common.collect.Lists
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -15,7 +16,7 @@ class IntegrationTest extends Specification {
         buildFile = projectFolder.newFile('build.gradle')
     }
 
-    def "Can run checkstyle"() {
+    def "Check runs checkstyle against all sourcesets"() {
         given:
         buildFile << """
             plugins {
@@ -28,11 +29,15 @@ class IntegrationTest extends Specification {
             }
         """
         when:
-        def result = runner("checkStyleFunctionalTest")
+        def taskPaths = runner("check")
             .build()
+            .taskPaths(TaskOutcome.NO_SOURCE)
 
         then:
-        result.output.contains("Task :checkstyleFunctionalTest NO-SOURCE")
+        taskPaths.containsAll(
+                ":checkstyleMain",
+                ":checkstyleFunctionalTest"
+        )
     }
 
     def  "PMD added to 'check' for each HMCTS configuration"() {
@@ -54,8 +59,7 @@ class IntegrationTest extends Specification {
         when:
         def tasks = runner("check")
                 .build()
-                .getTasks()
-                .collect { it.path }
+                .taskPaths(TaskOutcome.NO_SOURCE)
 
        then:
        tasks.containsAll([

@@ -47,33 +47,21 @@ gradlePlugin {
     }
 }
 
-// Add a source set for the functional test suite
 sourceSets {
-    functionalTest {
-    }
     integrationTest {
     }
 }
 
-gradlePlugin.testSourceSets(sourceSets.functionalTest, sourceSets.integrationTest)
-configurations.functionalTestImplementation.extendsFrom(configurations.testImplementation)
+gradlePlugin.testSourceSets(sourceSets.integrationTest)
 configurations.integrationTestImplementation.extendsFrom(configurations.testImplementation)
-
-task functionalTest(type: Test) {
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-}
 
 task integrationTest(type: Test) {
     testClassesDirs = sourceSets.integrationTest.output.classesDirs
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-functionalTest.mustRunAfter(integrationTest)
-
 check {
-    // Run the functional tests as part of `check`
-    dependsOn(tasks.functionalTest, tasks.integrationTest)
+    dependsOn(tasks.integrationTest)
 }
 
 pluginBundle {
@@ -85,5 +73,5 @@ pluginBundle {
 ext['gradle.publish.key'] = System.getenv('GRADLE_PLUGIN_PORTAL_KEY')
 ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
 
-// Ensure functional tests depend on these test projects as input.
-tasks.functionalTest.inputs.files file('test-projects')
+// The tests use copies of this build.
+tasks.integrationTest.inputs.files file('test-projects')

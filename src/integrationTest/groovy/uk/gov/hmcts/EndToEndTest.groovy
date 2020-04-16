@@ -2,11 +2,13 @@ package uk.gov.hmcts
 
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
-class FunctionalTest extends Specification {
+// Test plugin against a complete Java library project.
+class EndToEndTest extends Specification {
     @Rule
     TemporaryFolder projectFolder = new TemporaryFolder()
 
@@ -26,8 +28,10 @@ class FunctionalTest extends Specification {
                 .build()
 
         then:
-        result.output.contains(":checkstyleMain")
-        result.output.contains(":pmdMain")
+        result.taskPaths(TaskOutcome.SUCCESS).containsAll(
+                ":checkstyleMain",
+                ":pmdMain"
+        )
         new File(projectFolder.getRoot(), "build/reports/pmd/main.html").exists()
     }
 }
