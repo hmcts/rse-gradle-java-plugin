@@ -1,4 +1,4 @@
-package uk.gov.hmcts;
+package uk.gov.hmcts.tools;
 
 import lombok.SneakyThrows;
 import org.gradle.api.DefaultTask;

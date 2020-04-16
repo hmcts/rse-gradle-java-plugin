@@ -1,4 +1,4 @@
-package uk.gov.hmcts;
+package uk.gov.hmcts.tools;
 
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.gradle.api.Project;
 import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
 
-final class DependencyCheckSetup {
+public final class DependencyCheckSetup {
     static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
         "checkstyle",
         "compileOnly",

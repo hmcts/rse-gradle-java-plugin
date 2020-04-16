@@ -1,4 +1,4 @@
-package uk.gov.hmcts;
+package uk.gov.hmcts.tools;
 
 import javax.inject.Inject;
 import java.io.BufferedWriter;
