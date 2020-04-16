@@ -16,8 +16,12 @@ public final class DependencyCheckSetup {
         "functionalTest",
         "smokeTest");
 
-    static final List<String> VARIANTS = Arrays
-        .asList("Compile", "CompileClasspath", "CompileOnly", "Runtime", "RuntimeClasspath");
+    static final List<String> VARIANTS = Arrays.asList(
+        "Compile",
+        "CompileClasspath",
+        "CompileOnly",
+        "Runtime",
+        "RuntimeClasspath");
 
     private DependencyCheckSetup() {
     }
@@ -36,6 +40,8 @@ public final class DependencyCheckSetup {
         // Disable scanning of .NET related binaries
         extension.getAnalyzers().setAssemblyEnabled(false);
 
+        // Exclude non-runtime configurations by default.
+        // This can be overridden in project build script if desired.
         List<String> skip = extension.getSkipConfigurations();
         skip.addAll(NON_RUNTIME_CONFIGURATIONS);
         for (String configuration : NON_RUNTIME_CONFIGURATIONS) {
