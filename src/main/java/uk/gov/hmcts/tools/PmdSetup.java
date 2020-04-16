@@ -22,6 +22,7 @@ public class PmdSetup extends DefaultTask {
 
     public static void apply(Project project) {
         project.getPlugins().apply(PmdPlugin.class);
+
         PmdExtension pmd = project.getExtensions().getByType(PmdExtension.class);
         pmd.setToolVersion("6.18.0");
         pmd.setReportsDir(project.getBuildDir().toPath().resolve("reports/pmd").toFile());
@@ -29,21 +30,16 @@ public class PmdSetup extends DefaultTask {
         // https://github.com/pmd/pmd/issues/876
         pmd.setRuleSets(new ArrayList<>());
 
-        project.afterEvaluate(PmdSetup::configurePmd);
-    }
+        PmdSetup configWriter = project.getTasks().create("writePMDConfig",
+            PmdSetup.class);
+        pmd.ruleSetFiles(configWriter.configFile);
 
-    // This must be done after Gradle's initialisation phase
-    // since it requires PMD's tasks to have been created based on source sets.
-    private static void configurePmd(Project project) {
-        PmdExtension pmd = project.getExtensions().getByType(PmdExtension.class);
-        if (pmd.getRuleSets().isEmpty()) {
-            PmdSetup writer = project.getTasks().create("writePMDConfig",
-                PmdSetup.class);
-            pmd.ruleSetFiles(writer.configFile);
+        // Once PMD tasks are created they must depend on PMD config being written.
+        project.afterEvaluate(evaluatedProject -> {
             for (Pmd pmdTask : project.getTasks().withType(Pmd.class)) {
-                pmdTask.dependsOn(writer);
+                pmdTask.dependsOn(configWriter);
             }
-        }
+        });
     }
 
     @Inject
