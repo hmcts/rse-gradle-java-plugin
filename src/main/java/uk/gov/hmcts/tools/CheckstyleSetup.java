@@ -22,25 +22,26 @@ public class CheckstyleSetup extends DefaultTask {
     public static void apply(Project project) {
         project.getPlugins().apply(CheckstylePlugin.class);
         CheckstyleExtension ext = project.getExtensions().getByType(CheckstyleExtension.class);
-        ext.setToolVersion("8.31");
         ext.setMaxWarnings(0);
         ext.setMaxErrors(0);
         ext.setIgnoreFailures(false);
 
-        project.afterEvaluate(CheckstyleSetup::configureCheckstyleTasks);
-    }
+        project.afterEvaluate(evaluatedProject -> {
+            CheckstyleSetup writer = project.getTasks().create("writeCheckstyleConfig",
+                CheckstyleSetup.class);
 
-    private static void configureCheckstyleTasks(Project project) {
-        CheckstyleSetup writer = project.getTasks().create("writeCheckstyleConfig",
-            CheckstyleSetup.class);
-
-        for (Checkstyle checkstyleTask : project.getTasks().withType(Checkstyle.class)) {
-            if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
-                checkstyleTask.setConfigFile(writer.configFile);
-                checkstyleTask.dependsOn(writer);
+            for (Checkstyle checkstyleTask : project.getTasks().withType(Checkstyle.class)) {
+                if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
+                    // Only set the tool version if we set the config file, since
+                    // file format can be tied to checkstyle version.
+                    ext.setToolVersion("8.31");
+                    checkstyleTask.setConfigFile(writer.configFile);
+                    checkstyleTask.dependsOn(writer);
+                }
             }
-        }
+        });
     }
+
 
     @Inject
     public CheckstyleSetup() {
