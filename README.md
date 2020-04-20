@@ -34,20 +34,6 @@ private String Violating_STYLEGUIDE_lIterAL = "bar";
 //CHECKSTYLE:ON
 ```
 
-## PMD
-
-[PMD](https://pmd.github.io/pmd-6.22.0/) is applied with the standard HMCTS [ruleset](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/pmd-ruleset.xml), which is extracted to `build/config/pmd-ruleset.xml` when pmd is invoked.
-
-### Additional PMD rulesets
-
-Additional PMD rulesets can be provided in your build script:
-
-```groovy
-pmd {
-    ruleSetFiles file('/path/to/more/rules.xml')
-}
-```
-
 ## OWASP Dependency Checker
 
 The [OWASP Dependency Checker](https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/index.html) provides monitoring of the project's dependencies and creates a report of known vulnerable components that are included in the build.
