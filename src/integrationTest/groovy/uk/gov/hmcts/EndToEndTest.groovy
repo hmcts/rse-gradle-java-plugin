@@ -29,9 +29,7 @@ class EndToEndTest extends Specification {
 
         then:
         result.taskPaths(TaskOutcome.SUCCESS).containsAll(
-                ":checkstyleMain",
-                ":pmdMain"
+                ":checkstyleMain"
         )
-        new File(projectFolder.getRoot(), "build/reports/pmd/main.html").exists()
     }
 }

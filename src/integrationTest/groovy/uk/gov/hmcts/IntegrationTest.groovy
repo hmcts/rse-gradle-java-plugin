@@ -40,37 +40,6 @@ class IntegrationTest extends Specification {
         )
     }
 
-    def  "PMD added to 'check' for each HMCTS configuration"() {
-        given:
-        buildFile << """
-            plugins {
-                id 'java-library'
-                id 'uk.gov.hmcts.java'
-            }
-            sourceSets {
-                integrationTest {
-                }
-                functionalTest {
-                }
-                smokeTest {
-                }
-            }
-        """
-        when:
-        def tasks = runner("check")
-                .build()
-                .taskPaths(TaskOutcome.NO_SOURCE)
-
-       then:
-       tasks.containsAll([
-              ":pmdMain",
-              ":pmdTest",
-              ":pmdFunctionalTest",
-              ":pmdIntegrationTest",
-              ":pmdSmokeTest"
-       ])
-    }
-
     def "Dependency check excludes known non-runtime configurations"() {
         given:
         buildFile << """
