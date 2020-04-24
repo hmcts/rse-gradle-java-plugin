@@ -95,6 +95,7 @@ class IntegrationTest extends Specification {
 
         then:
         result.output.contains("dependencies were identified with known vulnerabilities")
+        new File(projectFolder.getRoot(), 'build/reports/dependency-check-report.html').exists()
 
         where:
         args | buildResult
