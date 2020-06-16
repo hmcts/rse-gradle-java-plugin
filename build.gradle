@@ -60,6 +60,8 @@ task integrationTest(type: Test) {
     classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
+integrationTest.mustRunAfter test
+
 check {
     dependsOn(tasks.integrationTest)
 }

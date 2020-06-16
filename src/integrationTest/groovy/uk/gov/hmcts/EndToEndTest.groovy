@@ -32,4 +32,25 @@ class EndToEndTest extends Specification {
                 ":checkstyleMain"
         )
     }
+
+    def "Cleans unused dependency suppressions"() {
+        when:
+        GradleRunner.create()
+                .forwardOutput()
+                .withDebug(true)
+                .withPluginClasspath()
+                .withArguments("cleanSuppressions", "-is")
+                .withGradleVersion("4.10.3")
+                .withProjectDir(projectFolder.getRoot())
+                .build()
+
+        def cleanSuppressions = new File(projectFolder.root, "suppressions.xml")
+        def doc = new XmlSlurper().parse(cleanSuppressions)
+
+        then:
+        // The guava suppression is active and should remain.
+        // The fake suppression should be cleared out.
+        doc.children().size() == 1
+        doc.children()[0].cve == "CVE-2018-10237"
+    }
 }
