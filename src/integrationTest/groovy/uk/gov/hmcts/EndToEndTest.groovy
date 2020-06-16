@@ -1,6 +1,5 @@
 package uk.gov.hmcts
 
-import groovy.xml.XmlUtil
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome

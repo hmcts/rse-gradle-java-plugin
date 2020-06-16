@@ -82,13 +82,6 @@ public final class DependencyCheckSetup {
     }
 
     @SneakyThrows
-    private static void writeFile(File f, String content) {
-        try (FileWriter w = new FileWriter(f)) {
-            w.write(content);
-        }
-    }
-
-    @SneakyThrows
     public static Set<String> getSuppressedCves(String dependencyCheckerReport) {
         GPathResult response = new XmlSlurper().parseText(dependencyCheckerReport);
         Set<String> result = new HashSet<>();
@@ -118,8 +111,15 @@ public final class DependencyCheckSetup {
     }
 
     @SneakyThrows
-    static String readFile(File f) {
+    private static String readFile(File f) {
         byte[] encoded = Files.readAllBytes(f.toPath());
         return new String(encoded, StandardCharsets.UTF_8);
+    }
+
+    @SneakyThrows
+    private static void writeFile(File f, String content) {
+        try (FileWriter w = new FileWriter(f)) {
+            w.write(content);
+        }
     }
 }
