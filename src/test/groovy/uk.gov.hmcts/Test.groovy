@@ -23,4 +23,18 @@ class Test extends Specification {
                 "CVE-2020-9488"
         ].toSet()
     }
+
+    def "filters out unused suppressions"() {
+        given:
+        def xml = this.getClass().getResource( '/has_redundant_suppressions.xml' ).text
+        def cves = [
+                "CVE-2018-1258"
+        ]
+        when:
+        def suppressions = DependencyCheckSetup.stripUnusedSuppressions(xml, cves)
+
+        then:
+        // See the suppressions file which has 4 suppressions referencing CVE-2018-1258.
+        suppressions.children().size() == 4
+    }
 }
