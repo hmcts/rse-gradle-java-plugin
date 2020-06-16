@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <suppress until="2030-01-01">
+    <notes><![CDATA[
+     Suppressing as it's a false positive (see: https://pivotal.io/security/cve-2018-1258)
+   ]]></notes>
+    <gav regex="true">^org\.springframework\.security:spring-security-crypto:5.2.[0-2].RELEASE</gav>
+    <cpe>cpe:/a:pivotal_software:spring_security</cpe>
+    <cve>CVE-2018-1258</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[Nested dependency of adal4j. Microsoft needs to update strong relation of this library in ServiceBus]]></notes>
+    <gav regex="true">^org\.apache\.sling:org\.apache\.sling\.javax\.activation:0\.1\.0$</gav>
+    <cve>CVE-2016-5394</cve>
+    <cve>CVE-2016-6798</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[ no fix available ]]></notes>
+    <gav regex="true">^org.codehaus.groovy:groovy-(json|xml):2\.5\.9$</gav>
+    <cve>CVE-2016-6497</cve>
+  </suppress>
+
+  <suppress>
+    <notes><![CDATA[ no fix available ]]></notes>
+    <gav regex="true">^org.springframework.security:spring-security-(config|web|core):5\.2\.2\.RELEASE$</gav>
+    <cve>CVE-2018-1258</cve>
+    <cve>CVE-2020-5407</cve>
+    <cve>CVE-2020-5408</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[No fix is available]]></notes>
+    <gav regex="true">.*security.*</gav>
+    <cve>CVE-2018-1258</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[No fix is available]]></notes>
+    <filePath regex="true">.*spring-security-test-5\.2\.2\.RELEASE\.jar</filePath>
+    <cve>CVE-2018-1258</cve>
+    <cve>CVE-2020-5407</cve>
+    <cve>CVE-2020-5408</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: commons-beanutils-1.9.3.jar
+   ]]></notes>
+    <gav regex="true">^commons-beanutils:commons-beanutils:.*$</gav>
+    <cve>CVE-2019-10086</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+       file name: flexmark-ext-xwiki-macros-0.34.30.jar
+       ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.vladsch\.flexmark/flexmark-ext-xwiki-macros@.*$</packageUrl>
+    <cpe>cpe:/a:xwiki:xwiki</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: flexmark-ext-xwiki-macros-0.34.30.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.vladsch\.flexmark/flexmark-ext-xwiki-macros@.*$</packageUrl>
+    <cve>CVE-2007-4898</cve>
+    <cve>CVE-2010-4641</cve>
+    <cve>CVE-2010-4642</cve>
+    <cve>CVE-2018-16277</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: flexmark-ext-gitlab-0.34.30.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.vladsch\.flexmark/flexmark\-ext\-gitlab@.*$</packageUrl>
+    <cpe>cpe:/a:gitlab:gitlab</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: asciidoctorj-1.5.6.jar
+   ]]></notes>
+    <sha1>bb757d4b8b0f8438ce2ed781f6688cc6c01d9237</sha1>
+    <cve>CVE-2018-18385</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: commons-beanutils-core-1.8.3.jar
+   ]]></notes>
+    <sha1>75812698e5e859f2cb587c622c4cdfcd61676426</sha1>
+    <cve>CVE-2014-0114</cve>
+    <cve>CVE-2019-10086</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+       file name: filters-2.0.235.jar
+       ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.jhlabs/filters@.*$</packageUrl>
+    <cpe>cpe:/a:image_processing_software:image_processing_software</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+       file name: serenity-report-resources-2.1.13.jar.
+       This is only used for TESTING purposes.
+   ]]></notes>
+    <filePath regex="true">.*serenity-report-resources-2\.1\.13\.ja</filePath>
+    <cve>CVE-2018-14040</cve>
+    <cve>CVE-2018-14041</cve>
+    <cve>CVE-2018-14042</cve>
+    <cve>CVE-2019-8331</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[ no fix available ]]></notes>
+    <gav regex="true">^org\.testcontainers:postgresql:1\.13\.0$</gav>
+    <cpe>cpe:/a:postgresql:postgresql</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: postgresql-1.13.0.jar
+   ]]></notes>
+    <sha1>95d3232e8c631c978357d5b35abfebe25b197424</sha1>
+    <cpe>cpe:/a:postgresql:postgresql</cpe>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: filters-2.0.235.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.jhlabs/filters@.*$</packageUrl>
+    <cve>CVE-2018-1000840</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar (shaded: org.jruby:yecht:1.1)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/yecht@.*$</packageUrl>
+    <cve>CVE-2010-1330</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar (shaded: org.jruby:yecht:1.1)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/yecht@.*$</packageUrl>
+    <cve>CVE-2011-4838</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar: jopenssl.jar (shaded: rubygems:jruby-openssl:0.9.16)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/rubygems/jruby\-openssl@.*$</packageUrl>
+    <cve>CVE-2010-1330</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar: jopenssl.jar (shaded: rubygems:jruby-openssl:0.9.16)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/rubygems/jruby\-openssl@.*$</packageUrl>
+    <cve>CVE-2011-4838</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: gradle-pitest-plugin-1.4.8.jar
+   ]]></notes>
+    <sha1>7cb169cf29e5cc1468b60d5e955f7ae68f12527c</sha1>
+    <cve>CVE-2019-11065</cve>
+    <cve>CVE-2019-15052</cve>
+    <cve>CVE-2019-16370</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: htmlunit-2.36.0.jar
+   ]]></notes>
+    <sha1>efe6df9c5bc1284cd1d7952434ea4f85c5a32f72</sha1>
+    <cve>CVE-2020-5529</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: htmlunit-core-js-2.36.0.jar
+   ]]></notes>
+    <sha1>47bc8cf3a812169a4ce283515604c6cbab4aa13f</sha1>
+    <cve>CVE-2020-5529</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: htmlunit-cssparser-1.5.0.jar
+   ]]></notes>
+    <sha1>7e40e04f32622e63a30e92ac158f799f67d8ddf0</sha1>
+    <cve>CVE-2020-5529</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: htmlunit-driver-2.36.0.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.seleniumhq\.selenium/htmlunit\-driver@.*$</packageUrl>
+    <cve>CVE-2020-5529</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-http:9.4.12.v20180830)
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.eclipse\.jetty/jetty\-http@.*$</packageUrl>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-jmx:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>c718f646e88e392fcf87020710e31787847f0145</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-security:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>33f42c754e8b0846c6c3c6ae9e612675862c34a7</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-server:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>e5127373881b5a577d27f5b57aec2e6c202fd545</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-servlet:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>e27578dfa580b1ccff57a14710e7ce2586deed9b</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-util:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>1162bea917a234ee2f66bc0a69937dc8b53483a6</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jetty-repacked-9.4.12.v20180830.jar (shaded: org.eclipse.jetty:jetty-xml:9.4.12.v20180830)
+   ]]></notes>
+    <sha1>0f73b76db79c1ba132cedf4ea08489173ce8226e</sha1>
+    <cve>CVE-2019-10241</cve>
+    <cve>CVE-2019-10247</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar: bcprov-jdk15on-1.54.jar
+   ]]></notes>
+    <sha1>1acdedeb89f1d950d67b73d481eb7736df65eedb</sha1>
+    <cve>CVE-2016-1000338</cve>
+    <cve>CVE-2016-1000339</cve>
+    <cve>CVE-2016-1000340</cve>
+    <cve>CVE-2016-1000341</cve>
+    <cve>CVE-2016-1000342</cve>
+    <cve>CVE-2016-1000343</cve>
+    <cve>CVE-2016-1000344</cve>
+    <cve>CVE-2016-1000345</cve>
+    <cve>CVE-2016-1000346</cve>
+    <cve>CVE-2016-1000352</cve>
+    <cve>CVE-2016-2427</cve>
+    <cve>CVE-2017-13098</cve>
+    <cve>CVE-2018-1000180</cve>
+    <cve>CVE-2018-1000180</cve>
+    <cve>CVE-2018-1000613</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jruby-complete-1.7.26.jar: readline.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.jruby/readline@.*$</packageUrl>
+    <cve>CVE-2010-1330</cve>
+    <cve>CVE-2011-4838</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: neko-htmlunit-2.36.0.jar
+   ]]></notes>
+    <sha1>6e999678a3b2813ea71fac4ebc5996b1406e954d</sha1>
+    <cve>CVE-2020-5529</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: openhtmltopdf-jsoup-dom-converter-0.0.1-RC13.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/com\.openhtmltopdf/openhtmltopdf\-jsoup\-dom\-converter@.*$</packageUrl>
+    <cve>CVE-2015-6748</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: pdfbox-2.0.8.jar
+   ]]></notes>
+    <sha1>17bdf273d66f3afe41eedb9d3ab6a7b819c44a0c</sha1>
+    <cve>CVE-2018-11797</cve>
+    <cve>CVE-2018-8036</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: phantomjsdriver-1.4.4.jar
+   ]]></notes>
+    <sha1>e5778e3273f8201bf9e0ff65fb8118f37b84beba</sha1>
+    <cve>CVE-2019-17221</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: selenium-opera-driver-3.141.59.jar
+   ]]></notes>
+    <sha1>6b11ed01182bfd8bb62ddeae34cf9eadd3cfc7ff</sha1>
+    <cve>CVE-2003-1561</cve>
+    <cve>CVE-2008-1761</cve>
+    <cve>CVE-2008-1764</cve>
+    <cve>CVE-2008-3079</cve>
+    <cve>CVE-2008-3172</cve>
+    <cve>CVE-2008-4293</cve>
+    <cve>CVE-2008-4695</cve>
+    <cve>CVE-2008-4696</cve>
+    <cve>CVE-2008-4794</cve>
+    <cve>CVE-2008-4795</cve>
+    <cve>CVE-2008-5679</cve>
+    <cve>CVE-2009-0915</cve>
+    <cve>CVE-2010-5227</cve>
+    <cve>CVE-2015-8960</cve>
+    <cve>CVE-2019-19788</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: xmpbox-2.0.8.jar
+   ]]></notes>
+    <sha1>bcce394a05b96c6155d27e144eb6e359ee7ff6b1</sha1>
+    <cve>CVE-2018-11797</cve>
+    <cve>CVE-2018-8036</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: xstream-1.4.9.jar
+   ]]></notes>
+    <sha1>c43f6e6bfa79b56e04a8898a923c3cf7144dd460</sha1>
+    <cve>CVE-2017-7957</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: log4j-to-slf4j-2.12.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j\-to\-slf4j@.*$</packageUrl>
+    <cve>CVE-2020-9488</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: log4j-api-2.12.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.apache\.logging\.log4j/log4j\-api@.*$</packageUrl>
+    <cve>CVE-2020-9488</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: dom4j-2.1.1.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.dom4j/dom4j@.*$</packageUrl>
+    <cve>CVE-2020-10683</cve>
+  </suppress>
+  <suppress>
+   <notes><![CDATA[
+   file name: tomcat-embed-core-9.0.31.jar
+   file name: tomcat-embed-websocket-9.0.31.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-(core|websocket)@.*$</packageUrl>
+   <cve>CVE-2020-9484</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: postgresql-42.2.11.jar
+   ]]></notes>
+    <packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
+    <cve>CVE-2020-13692</cve>
+  </suppress>
+</suppressions>

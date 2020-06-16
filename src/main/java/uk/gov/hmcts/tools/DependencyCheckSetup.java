@@ -1,8 +1,14 @@
 package uk.gov.hmcts.tools;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import groovy.util.XmlSlurper;
+import groovy.util.slurpersupport.GPathResult;
+import groovy.util.slurpersupport.NodeChild;
+import lombok.SneakyThrows;
 import org.gradle.api.Project;
 import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
@@ -49,5 +55,18 @@ public final class DependencyCheckSetup {
                 skip.add(configuration + variant);
             }
         }
+    }
+
+    @SneakyThrows
+    public static Set<String> getSuppressedCves(String dependencyCheckerReport) {
+        GPathResult response = new XmlSlurper().parseText(dependencyCheckerReport);
+        Set<String> result = new HashSet<>();
+        response.depthFirst().forEachRemaining(x -> {
+            NodeChild n = (NodeChild) x;
+            if (n.name().equals("suppressedVulnerability")) {
+                result.add(n.getProperty("name").toString());
+            }
+        });
+        return result;
     }
 }
