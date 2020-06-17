@@ -14,7 +14,7 @@ Apply in your plugins block in `build.gradle`:
 
 ```groovy
 plugins {
-    id 'uk.gov.hmcts.java' version '0.5.0'
+    id 'uk.gov.hmcts.java' version '0.7.0'
 }
 ```
 
@@ -55,3 +55,11 @@ dependencyCheck {
   suppressionFile = 'path/to/supression.xml'
 }
 ```
+
+### Cleaning unnecessary suppressions
+
+A `cleanSuppressions` gradle task is provided that removes any obsolete suppressions from your dependency checker suppression file.
+
+`./gradlew cleanSuppressions`
+
+Will run the dependency checker's dependency analysis and compare the detected CVEs to your suppressions. Any suppressions that are no longer needed will be stripped from your suppressions XML file.
