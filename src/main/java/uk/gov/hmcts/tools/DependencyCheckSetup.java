@@ -31,6 +31,7 @@ public final class DependencyCheckSetup {
         "checkstyle",
         "compileOnly",
         "contract",
+        "contractTest",
         "findbugs",
         "functionalTest",
         "integrationTest",
