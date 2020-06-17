@@ -30,9 +30,12 @@ public final class DependencyCheckSetup {
     static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
         "checkstyle",
         "compileOnly",
-        "pmd",
-        "integrationTest",
+        "contract",
+        "findbugs",
         "functionalTest",
+        "integrationTest",
+        "jacocoAnt",
+        "pmd",
         "smokeTest");
 
     static final List<String> VARIANTS = Arrays.asList(
