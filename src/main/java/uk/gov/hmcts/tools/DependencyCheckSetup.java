@@ -2,6 +2,7 @@ package uk.gov.hmcts.tools;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -11,11 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import groovy.util.Node;
-import groovy.util.XmlParser;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
 import groovy.util.slurpersupport.NodeChild;
+import groovy.xml.DOMBuilder;
 import groovy.xml.XmlUtil;
 import lombok.SneakyThrows;
 import org.gradle.api.Project;
@@ -23,6 +23,8 @@ import org.gradle.api.Task;
 import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public final class DependencyCheckSetup {
     static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
@@ -76,7 +78,7 @@ public final class DependencyCheckSetup {
             File report = new File(reportDir, "dependency-check-report.xml");
             Set<String> cves = getSuppressedCves(readFile(report));
             File suppressions = project.file(extension.getSuppressionFile());
-            Node cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
+            Element cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
             writeFile(suppressions, XmlUtil.serialize(cleanedReport));
         });
     }
@@ -95,17 +97,17 @@ public final class DependencyCheckSetup {
     }
 
     @SneakyThrows
-    public static Node stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
-        Node suppressions = new XmlParser().parseText(suppressionXml);
+    public static Element stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
+        Element suppressions = DOMBuilder.parse(new StringReader(suppressionXml)).getDocumentElement();
 
         List<Node> redundant = new ArrayList<>();
-        suppressions.children().forEach(x -> {
-            Node n = (Node) x;
-            if (!usedCves.stream().anyMatch(c -> n.text().contains(c))) {
+        for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
+            Node n = suppressions.getChildNodes().item(t);
+            if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
                 redundant.add(n);
             }
-        });
-        redundant.forEach(x -> suppressions.remove(x));
+        }
+        redundant.forEach(x -> suppressions.removeChild(x));
 
         return suppressions;
     }
