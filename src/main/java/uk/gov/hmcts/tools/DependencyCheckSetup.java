@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -82,8 +81,8 @@ public final class DependencyCheckSetup {
             File report = new File(reportDir, "dependency-check-report.xml");
             Set<String> cves = getSuppressedCves(readFile(report));
             File suppressions = project.file(extension.getSuppressionFile());
-            Element cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
-            writeFile(suppressions, XmlUtil.serialize(cleanedReport));
+            String cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
+            writeFile(suppressions, cleanedReport);
         });
     }
 
@@ -101,19 +100,43 @@ public final class DependencyCheckSetup {
     }
 
     @SneakyThrows
-    public static Element stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
+    public static String stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
         Element suppressions = DOMBuilder.parse(new StringReader(suppressionXml)).getDocumentElement();
 
-        List<Node> redundant = new ArrayList<>();
         for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
             Node n = suppressions.getChildNodes().item(t);
+            // Remove the whole node if it has no reference to active CVEs.
             if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
-                redundant.add(n);
+                suppressions.removeChild(n);
+                t--;
+                continue;
+            }
+
+            // Otherwise strip out any individual obsolete CVEs.
+            for (int u = 0; u < n.getChildNodes().getLength(); u++) {
+                Node cve = n.getChildNodes().item(u);
+                if (cve.getNodeName().toLowerCase().equals("cve")) {
+                    if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
+                        final Node prev = cve.getPreviousSibling();
+                        final Node next = cve.getNextSibling();
+                        n.removeChild(cve);
+                        u--;
+                        // We also have to strip out the whitespace or we get a blank line.
+                        // Hoorah for json.
+                        if (prev.getTextContent().matches("^\\s*$")) {
+                            n.removeChild(prev);
+                            u--;
+                        }
+                        if (next.getTextContent().matches("^\\s*$")) {
+                            n.removeChild(next);
+                            u--;
+                        }
+                    }
+                }
             }
         }
-        redundant.forEach(x -> suppressions.removeChild(x));
 
-        return suppressions;
+        return XmlUtil.serialize(suppressions);
     }
 
     @SneakyThrows
