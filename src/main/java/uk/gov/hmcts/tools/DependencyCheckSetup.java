@@ -1,11 +1,13 @@
 package uk.gov.hmcts.tools;
 
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +27,7 @@ import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public final class DependencyCheckSetup {
     static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
@@ -82,8 +85,8 @@ public final class DependencyCheckSetup {
             File report = new File(reportDir, "dependency-check-report.xml");
             Set<String> cves = getSuppressedCves(readFile(report));
             File suppressions = project.file(extension.getSuppressionFile());
-            Element cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
-            writeFile(suppressions, XmlUtil.serialize(cleanedReport));
+            String cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
+            writeFile(suppressions, cleanedReport);
         });
     }
 
@@ -101,19 +104,51 @@ public final class DependencyCheckSetup {
     }
 
     @SneakyThrows
-    public static Element stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
+    public static String stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
         Element suppressions = DOMBuilder.parse(new StringReader(suppressionXml)).getDocumentElement();
 
-        List<Node> redundant = new ArrayList<>();
-        for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
-            Node n = suppressions.getChildNodes().item(t);
-            if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
-                redundant.add(n);
+        // Remove any unused CVEs.
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPathExpression xpathExp = xpathFactory.newXPath().compile(
+            "//*[local-name()='cve']");
+        NodeList cves = (NodeList)
+            xpathExp.evaluate(suppressions, XPathConstants.NODESET);
+        for (int i = 0; i < cves.getLength(); i++) {
+            Node cve = cves.item(i);
+            if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
+                cve.getParentNode().removeChild(cve);
             }
         }
-        redundant.forEach(x -> suppressions.removeChild(x));
 
-        return suppressions;
+        // Remove any unused suppressions.
+        for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
+            Node n = suppressions.getChildNodes().item(t);
+            // Remove the whole node if it has no reference to active CVEs.
+            if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
+                suppressions.removeChild(n);
+                t--;
+                continue;
+            }
+        }
+
+        // Strip out all whitespace and reindent.
+        // This must be done in multiple passes since removing nodes creates new whitespace.
+        xpathExp = xpathFactory.newXPath().compile(
+            "//text()[normalize-space(.) = '']");
+        while (true) {
+            NodeList emptyTextNodes = (NodeList)
+                xpathExp.evaluate(suppressions, XPathConstants.NODESET);
+
+            if (emptyTextNodes.getLength() <= 0) {
+                break;
+            }
+            for (int i = 0; i < emptyTextNodes.getLength(); i++) {
+                Node emptyTextNode = emptyTextNodes.item(i);
+                emptyTextNode.getParentNode().removeChild(emptyTextNode);
+            }
+        }
+
+        return XmlUtil.serialize(suppressions);
     }
 
     @SneakyThrows

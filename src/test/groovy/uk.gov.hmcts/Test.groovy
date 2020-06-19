@@ -1,5 +1,6 @@
 package uk.gov.hmcts
 
+import groovy.xml.XmlSlurper
 import groovy.xml.XmlUtil
 import org.w3c.dom.Element
 import spock.lang.Specification
@@ -33,12 +34,21 @@ class Test extends Specification {
                 "CVE-2018-1258"
         ]
         when:
-        Element suppressions = DependencyCheckSetup.stripUnusedSuppressions(xml, cves)
+        String report = DependencyCheckSetup.stripUnusedSuppressions(xml, cves)
+        def suppressions = new groovy.util.XmlParser().parseText(report)
 
         then:
-        // See the suppressions file which has 4 suppressions referencing CVE-2018-1258.
-        suppressions.getChildNodes().getLength() == 4
+        // See the suppressions file which has 5 suppressions referencing CVE-2018-1258.
+        suppressions.children().size() == 5
         // Preserves these data tags on reserialisation.
-        XmlUtil.serialize(suppressions).contains "<![CDATA["
+        report.contains "<![CDATA["
+
+        // Individual unused CVEs should be stripped out
+        suppressions.children()[0].value().size() == 2
+        suppressions.children()[0].notes.text() == "preserved"
+        suppressions.children()[0].cve.text() == "CVE-2018-1258"
+
+        // Blank lines stripped from serialized file
+        report.readLines().every() { !(it ==~ /^\s*$/)}
     }
 }
