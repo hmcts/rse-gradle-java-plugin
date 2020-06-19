@@ -17,20 +17,28 @@ class EndToEndTest extends Specification {
         FileUtils.copyDirectory(testLibrary, projectFolder.getRoot())
     }
 
-    def "Runs all checks"() {
+    def "All tasks run successfully"() {
         when:
         def result = GradleRunner.create()
                 .forwardOutput()
                 .withPluginClasspath()
-                .withArguments("check", "-is")
-                .withGradleVersion("4.10.3")
+                .withArguments("check", "cleanSuppressions", "-is")
+                .withGradleVersion(gradleVersion)
                 .withProjectDir(projectFolder.getRoot())
                 .build()
 
         then:
         result.taskPaths(TaskOutcome.SUCCESS).containsAll(
-                ":checkstyleMain"
+                ":checkstyleMain",
+                ":cleanSuppressions"
         )
+
+        where:
+        gradleVersion << [
+               "4.10.3",
+               "5.0",
+               "6.0"
+        ]
     }
 
     def "Cleans unused dependency suppressions"() {
