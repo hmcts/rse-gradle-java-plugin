@@ -1,5 +1,8 @@
 package uk.gov.hmcts.tools;
 
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.StringReader;
@@ -24,6 +27,7 @@ import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
 import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public final class DependencyCheckSetup {
     static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
@@ -103,6 +107,20 @@ public final class DependencyCheckSetup {
     public static String stripUnusedSuppressions(String suppressionXml, Collection<String> usedCves) {
         Element suppressions = DOMBuilder.parse(new StringReader(suppressionXml)).getDocumentElement();
 
+        // Remove any unused CVEs.
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPathExpression xpathExp = xpathFactory.newXPath().compile(
+            "//*[local-name()='cve']");
+        NodeList cves = (NodeList)
+            xpathExp.evaluate(suppressions, XPathConstants.NODESET);
+        for (int i = 0; i < cves.getLength(); i++) {
+            Node cve = cves.item(i);
+            if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
+                cve.getParentNode().removeChild(cve);
+            }
+        }
+
+        // Remove any unused suppressions.
         for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
             Node n = suppressions.getChildNodes().item(t);
             // Remove the whole node if it has no reference to active CVEs.
@@ -111,28 +129,22 @@ public final class DependencyCheckSetup {
                 t--;
                 continue;
             }
+        }
 
-            // Otherwise strip out any individual obsolete CVEs.
-            for (int u = 0; u < n.getChildNodes().getLength(); u++) {
-                Node cve = n.getChildNodes().item(u);
-                if (cve.getNodeName().toLowerCase().equals("cve")) {
-                    if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
-                        final Node prev = cve.getPreviousSibling();
-                        final Node next = cve.getNextSibling();
-                        n.removeChild(cve);
-                        u--;
-                        // We also have to strip out the whitespace or we get a blank line.
-                        // Hoorah for json.
-                        if (prev.getTextContent().matches("^\\s*$")) {
-                            n.removeChild(prev);
-                            u--;
-                        }
-                        if (next.getTextContent().matches("^\\s*$")) {
-                            n.removeChild(next);
-                            u--;
-                        }
-                    }
-                }
+        // Strip out all whitespace and reindent.
+        // This must be done in multiple passes since removing nodes creates new whitespace.
+        xpathExp = xpathFactory.newXPath().compile(
+            "//text()[normalize-space(.) = '']");
+        while (true) {
+            NodeList emptyTextNodes = (NodeList)
+                xpathExp.evaluate(suppressions, XPathConstants.NODESET);
+
+            if (emptyTextNodes.getLength() <= 0) {
+                break;
+            }
+            for (int i = 0; i < emptyTextNodes.getLength(); i++) {
+                Node emptyTextNode = emptyTextNodes.item(i);
+                emptyTextNode.getParentNode().removeChild(emptyTextNode);
             }
         }
 
