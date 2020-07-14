@@ -1,6 +1,7 @@
 package uk.gov.hmcts
 
 import com.google.common.collect.Lists
+import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
@@ -62,8 +63,7 @@ class IntegrationTest extends Specification {
                 .build()
 
         then:
-        result.output =~ "Analyzing.+:compile\\s"
-        result.output =~ "Analyzing.+:runtime\\s"
+        result.output =~ "Analyzing.+:runtimeClasspath\\s"
         !(result.output =~ "Analyzing.+:integrationTest\\s")
         !(result.output =~ "Analyzing.+:functionalTest\\s")
         !(result.output =~ "Analyzing.+:smokeTest\\s")
@@ -101,6 +101,37 @@ class IntegrationTest extends Specification {
         args | buildResult
         ["-DdependencyCheck.failBuild=true"] | "buildAndFail"
         [] | "build"
+    }
+
+    def "Dependency check detects vulnerabilities in transient dependencies"() {
+        given:
+        File testLibrary = new File("test-projects/test-library")
+        FileUtils.copyDirectory(testLibrary, new File(projectFolder.getRoot(), "test-library"))
+        buildFile << """
+            plugins {
+                id 'java-library'
+                id 'uk.gov.hmcts.java'
+            }
+
+            repositories {
+                jcenter()
+            }
+
+            dependencies {
+                // Known to have a CVE that should be detected by dependency checker.
+                compile project(':test-library')
+            }
+        """
+        new File(projectFolder.getRoot(), 'settings.gradle') << """
+            include 'test-library'
+        """
+
+        when:
+        def result = runner((["dependencyCheckAnalyze"] + '-DdependencyCheck.failBuild=true') as String[])
+                .buildAndFail()
+
+        then:
+        result.output.contains("dependencies were identified with known vulnerabilities")
     }
 
     GradleRunner runner(String... args) {
