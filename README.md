@@ -14,7 +14,7 @@ Apply in your plugins block in `build.gradle`:
 
 ```groovy
 plugins {
-    id 'uk.gov.hmcts.java' version '0.9.0'
+    id 'uk.gov.hmcts.java' version '0.10.0'
 }
 ```
 
