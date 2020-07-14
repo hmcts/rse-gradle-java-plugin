@@ -8,10 +8,8 @@ import java.io.FileWriter;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import groovy.util.XmlSlurper;
@@ -30,24 +28,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public final class DependencyCheckSetup {
-    static final List<String> NON_RUNTIME_CONFIGURATIONS = Arrays.asList(
-        "checkstyle",
-        "compileOnly",
-        "contract",
-        "contractTest",
-        "findbugs",
-        "functionalTest",
-        "integrationTest",
-        "jacocoAnt",
-        "pmd",
-        "smokeTest");
-
-    static final List<String> VARIANTS = Arrays.asList(
-        "Compile",
-        "CompileClasspath",
-        "CompileOnly",
-        "Runtime",
-        "RuntimeClasspath");
 
     private DependencyCheckSetup() {
     }
@@ -66,16 +46,9 @@ public final class DependencyCheckSetup {
         // Disable scanning of .NET related binaries
         extension.getAnalyzers().setAssemblyEnabled(false);
 
-        // Exclude non-runtime configurations by default.
+        // Scan only runtime configurations by default.
         // This can be overridden in project build script if desired.
-        List<String> skip = extension.getSkipConfigurations();
-        skip.addAll(NON_RUNTIME_CONFIGURATIONS);
-        for (String configuration : NON_RUNTIME_CONFIGURATIONS) {
-            for (String variant : VARIANTS) {
-                skip.add(configuration + variant);
-            }
-        }
-
+        extension.getScanConfigurations().add("runtimeClasspath");
         extension.getFormats().add(Format.XML);
 
         Task cleaner = project.getTasks().create("cleanSuppressions");
