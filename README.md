@@ -18,6 +18,17 @@ plugins {
 }
 ```
 
+### Multi-project builds
+
+Apply the plugin in the root project and any Java subprojects, omitting the version specifier in subprojects:
+
+```groovy
+// Subproject
+plugins {
+    id 'uk.gov.hmcts.java'
+}
+```
+
 ## Checkstyle
 
 [Checkstyle](https://checkstyle.org/checks.html) is automatically applied and configured to use the [HMCTS styleguide](https://github.com/hmcts/gradle-java-plugin/blob/master/src/main/resources/hmcts-checkstyle.xml).
