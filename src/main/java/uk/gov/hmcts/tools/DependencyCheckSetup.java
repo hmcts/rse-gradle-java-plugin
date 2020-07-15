@@ -35,13 +35,8 @@ public final class DependencyCheckSetup {
     public static void apply(Project project) {
         project.getPlugins().apply(DependencyCheckPlugin.class);
 
-        // Specifies if the build should be failed if a CVSS score above a specified level is identified.
-        // range of 0-10 fails the build, anything greater and it doesn't fail the build.
-        int code = "true".equalsIgnoreCase(System.getProperty("dependencyCheck.failBuild"))
-            ? 0
-            : 11;
         DependencyCheckExtension extension = project.getExtensions().getByType(DependencyCheckExtension.class);
-        extension.setFailBuildOnCVSS((float) code);
+        extension.setFailBuildOnCVSS(0f);
 
         // Disable scanning of .NET related binaries
         extension.getAnalyzers().setAssemblyEnabled(false);

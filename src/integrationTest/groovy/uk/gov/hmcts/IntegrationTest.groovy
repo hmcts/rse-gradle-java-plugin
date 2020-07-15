@@ -72,7 +72,7 @@ class IntegrationTest extends Specification {
         !(result.output =~ "Analyzing.+:compileOnly\\s")
     }
 
-    def "Dependency check can fail build"(args, buildResult) {
+    def "Dependency check fails build by default"() {
         given:
         buildFile << """
             plugins {
@@ -90,17 +90,12 @@ class IntegrationTest extends Specification {
         """
         when:
         // Expect build failure or success depending on provided Gradle property.
-        def result = runner((["dependencyCheckAnalyze"] + args) as String[])
-            ."$buildResult"()
+        def result = runner((["dependencyCheckAnalyze"]) as String[])
+            .buildAndFail()
 
         then:
         result.output.contains("dependencies were identified with known vulnerabilities")
         new File(projectFolder.getRoot(), 'build/reports/dependency-check-report.html').exists()
-
-        where:
-        args | buildResult
-        ["-DdependencyCheck.failBuild=true"] | "buildAndFail"
-        [] | "build"
     }
 
     def "Dependency check detects vulnerabilities in transient dependencies"() {
@@ -127,7 +122,7 @@ class IntegrationTest extends Specification {
         """
 
         when:
-        def result = runner((["dependencyCheckAnalyze"] + '-DdependencyCheck.failBuild=true') as String[])
+        def result = runner((["dependencyCheckAnalyze"]) as String[])
                 .buildAndFail()
 
         then:
