@@ -56,9 +56,7 @@ class EndToEndTest extends Specification {
         def doc = new XmlSlurper().parse(cleanSuppressions)
 
         then:
-        // The guava suppression is active and should remain.
         // The fake suppression should be cleared out.
-        doc.children().size() == 1
-        doc.children()[0].cve == "CVE-2018-10237"
+        doc.children().size() == 0
     }
 }

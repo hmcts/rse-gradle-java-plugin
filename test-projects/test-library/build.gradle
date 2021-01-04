@@ -16,9 +16,6 @@ repositories {
 }
 
 dependencies {
-    // Known to have a CVE that should be detected by dependency checker.
-    compile group: 'com.google.guava', name: 'guava', version: '20.0'
-
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
