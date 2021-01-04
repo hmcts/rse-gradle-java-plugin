@@ -114,7 +114,7 @@ class IntegrationTest extends Specification {
 
             dependencies {
                 // Known to have a CVE that should be detected by dependency checker.
-                compile project(':test-library')
+                compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '1.2.9.RELEASE'
             }
         """
         new File(projectFolder.getRoot(), 'settings.gradle') << """
