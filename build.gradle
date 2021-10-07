@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     implementation 'org.owasp:dependency-check-gradle:6.3.2'
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.9'
