@@ -80,7 +80,7 @@ class IntegrationTest extends Specification {
                 id 'uk.gov.hmcts.java'
             }
             repositories {
-                jcenter()
+                mavenCentral()
             }
 
             dependencies {
@@ -109,7 +109,7 @@ class IntegrationTest extends Specification {
             }
 
             repositories {
-                jcenter()
+                mavenCentral()
             }
 
             dependencies {
