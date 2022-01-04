@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.owasp:dependency-check-gradle:6.5.0.1'
+    implementation 'org.owasp:dependency-check-gradle:6.5.2.1'
     // We make use of the ReportGenerator format types in the core lib.
     compileOnly 'org.owasp:dependency-check-core:6.5.0'
 
