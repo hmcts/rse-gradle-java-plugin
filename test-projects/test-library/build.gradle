@@ -12,6 +12,8 @@ plugins {
 }
 
 repositories {
+    maven { url 'https://jitpack.io' } // this one being first (at the top) causes issues!!
+    mavenLocal()
     mavenCentral()
 }
 
@@ -28,4 +30,10 @@ sourceSets {
 
 dependencyCheck {
     suppressionFile = file('suppressions.xml').absolutePath
+}
+
+task assertRepositoriesOrdered {
+    doLast {
+        assert project.getRepositories().get(0).getName().equalsIgnoreCase("MavenLocal")
+    }
 }

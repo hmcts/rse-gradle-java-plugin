@@ -22,7 +22,7 @@ class EndToEndTest extends Specification {
         def result = GradleRunner.create()
                 .forwardOutput()
                 .withPluginClasspath()
-                .withArguments("check", "cleanSuppressions", "-is")
+                .withArguments("check", "cleanSuppressions", "-is", "assertRepositoriesOrdered")
                 .withGradleVersion(gradleVersion)
                 .withProjectDir(projectFolder.getRoot())
                 .build()
@@ -30,7 +30,8 @@ class EndToEndTest extends Specification {
         then:
         result.taskPaths(TaskOutcome.SUCCESS).containsAll(
                 ":checkstyleMain",
-                ":cleanSuppressions"
+                ":cleanSuppressions",
+                ":assertRepositoriesOrdered"
         )
 
         where:
