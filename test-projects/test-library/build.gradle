@@ -12,6 +12,9 @@ plugins {
 }
 
 repositories {
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://somewhereelse.io' }
+    mavenLocal()
     mavenCentral()
 }
 
@@ -28,4 +31,14 @@ sourceSets {
 
 dependencyCheck {
     suppressionFile = file('suppressions.xml').absolutePath
+}
+
+task assertRepositoriesOrdered {
+    doLast {
+        assert project.getRepositories().size().equals(4)
+        assert project.getRepositories().get(0).getName().equalsIgnoreCase("MavenLocal")
+        assert project.getRepositories().get(1).getName().equalsIgnoreCase("MavenRepo")
+        assert project.getRepositories().get(2).getName().equalsIgnoreCase("maven")
+        assert project.getRepositories().get(3).getName().equalsIgnoreCase("maven2")
+    }
 }
