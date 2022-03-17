@@ -1,21 +1,17 @@
 package uk.gov.hmcts.tools;
 
-import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.repositories.ArtifactRepository;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 
 
-public class RepositoryOptimiser extends DefaultTask {
+public class RepositoryOptimiser {
 
     private static final String PRIORITY_REPO_NAME = "mavenlocal";
 
-    @Inject
-    public RepositoryOptimiser() {
-        super();
+    private RepositoryOptimiser() {
     }
 
     public static void apply(Project project) {
