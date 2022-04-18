@@ -12,8 +12,8 @@ repositories {
 dependencies {
     implementation 'org.owasp:dependency-check-gradle:7.0.3'
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-	annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.10'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
