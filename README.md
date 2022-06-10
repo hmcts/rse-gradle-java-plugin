@@ -14,7 +14,7 @@ Apply in your plugins block in `build.gradle`:
 
 ```groovy
 plugins {
-    id 'uk.gov.hmcts.java' version '0.11.0'
+    id 'uk.gov.hmcts.java' version '[@top of page]'
 }
 ```
 
@@ -49,7 +49,7 @@ private String Violating_STYLEGUIDE_lIterAL = "bar";
 
 The [OWASP Dependency Checker](https://jeremylong.github.io/DependencyCheck/dependency-check-gradle/index.html) provides monitoring of the project's dependencies and creates a report of known vulnerable components that are included in the build.
 
-By default, a set of known non-runtime dependency sets are excluded from analysis ([viewable here](https://github.com/hmcts/gradle-java-plugin/blob/f64ea895d880cc9c066a3bdef20c0fb90322cfad/src/main/java/uk/gov/hmcts/DependencyCheckSetup.java#L28-L28)).
+It only scans runtime configurations by default.  This can be overridden in project build script if desired.
 
 ### Usage
 
