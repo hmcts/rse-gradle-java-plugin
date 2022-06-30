@@ -7,6 +7,7 @@ import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstyleExtension;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
 import org.gradle.api.tasks.TaskAction;
+import org.gradle.util.VersionNumber;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
 public class CheckstyleSetup extends DefaultTask {
 
     File configFile;
+    public static final String minCheckstyleVersion = "10.3.1";
 
     public static void apply(Project project) {
         project.getPlugins().apply(CheckstylePlugin.class);
@@ -32,9 +34,13 @@ public class CheckstyleSetup extends DefaultTask {
 
             for (Checkstyle checkstyleTask : project.getTasks().withType(Checkstyle.class)) {
                 if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
-                    // Only set the tool version if we set the config file, since
-                    // file format can be tied to checkstyle version.
-                    ext.setToolVersion("8.31");
+                    // If using bundled checkstyle config, set a floor for checkstyle version since older versions may
+                    // not support our bundled config.
+                    if (VersionNumber.parse(minCheckstyleVersion)
+                        .compareTo(VersionNumber.parse(ext.getToolVersion())) > 0) {
+                        ext.setToolVersion(minCheckstyleVersion);
+                    }
+
                     checkstyleTask.setConfigFile(writer.configFile);
                     checkstyleTask.dependsOn(writer);
                 }
