@@ -1,8 +1,5 @@
 package uk.gov.hmcts
 
-import groovy.xml.XmlSlurper
-import groovy.xml.XmlUtil
-import org.w3c.dom.Element
 import spock.lang.Specification
 import uk.gov.hmcts.tools.DependencyCheckSetup
 

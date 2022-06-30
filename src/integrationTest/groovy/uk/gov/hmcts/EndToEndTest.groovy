@@ -6,6 +6,7 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import uk.gov.hmcts.tools.CheckstyleSetup
 
 // Test plugin against a complete Java library project.
 class EndToEndTest extends Specification {
@@ -33,6 +34,7 @@ class EndToEndTest extends Specification {
                 ":cleanSuppressions",
                 ":assertRepositoriesOrdered"
         )
+        result.output =~ "Running Checkstyle " + CheckstyleSetup.minCheckstyleVersion
 
         where:
         gradleVersion << [

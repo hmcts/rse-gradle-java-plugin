@@ -50,6 +50,8 @@ gradlePlugin {
 
 sourceSets {
     integrationTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
     }
 }
 
