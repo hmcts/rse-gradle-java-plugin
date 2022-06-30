@@ -19,7 +19,10 @@ import javax.inject.Inject;
 public class CheckstyleSetup extends DefaultTask {
 
     File configFile;
-    public static final String minCheckstyleVersion = "10.3.1";
+
+    // Recent checkstyle versions flag an annotation array indentation which is widely used at HMCTS.
+    // Consequently we don't force recent versions onto teams (but they may opt in).
+    public static final String minCheckstyleVersion = "8.31";
 
     public static void apply(Project project) {
         project.getPlugins().apply(CheckstylePlugin.class);

@@ -34,7 +34,8 @@ class EndToEndTest extends Specification {
                 ":cleanSuppressions",
                 ":assertRepositoriesOrdered"
         )
-        result.output =~ "Running Checkstyle " + CheckstyleSetup.minCheckstyleVersion
+        // The test project declares checkstyle 8.32
+        result.output =~ "Running Checkstyle 8.32"
 
         where:
         gradleVersion << [
