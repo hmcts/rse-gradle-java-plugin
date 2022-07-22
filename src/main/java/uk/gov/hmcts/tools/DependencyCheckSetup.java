@@ -38,8 +38,14 @@ public final class DependencyCheckSetup {
         DependencyCheckExtension extension = project.getExtensions().getByType(DependencyCheckExtension.class);
         extension.setFailBuildOnCVSS(0f);
 
-        // Disable scanning of .NET related binaries
-        extension.getAnalyzers().setAssemblyEnabled(false);
+        // Match the CNP pipeline which disables these checks
+        // https://github.com/hmcts/cnp-jenkins-library/blob/master/src/uk/gov/hmcts/contino/GradleBuilder.groovy#L135
+        var analyzers = extension.getAnalyzers();
+        analyzers.setAssemblyEnabled(false);
+        analyzers.setCentralEnabled(false);
+        analyzers.getRetirejs().setEnabled(false);
+        analyzers.getOssIndex().setEnabled(false);
+
 
         // Scan only runtime configurations by default.
         // This can be overridden in project build script if desired.
