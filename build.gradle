@@ -15,7 +15,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.13'
+    testImplementation 'org.codehaus.groovy:groovy-all:3.0.14'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
     testImplementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
 
