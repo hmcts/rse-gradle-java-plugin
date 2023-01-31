@@ -39,7 +39,6 @@ class EndToEndTest extends Specification {
 
         where:
         gradleVersion << [
-               "4.10.3",
                "5.0",
                "6.0"
         ]
@@ -52,7 +51,7 @@ class EndToEndTest extends Specification {
                 .withDebug(true)
                 .withPluginClasspath()
                 .withArguments("cleanSuppressions", "-is")
-                .withGradleVersion("4.10.3")
+                .withGradleVersion("5.0")
                 .withProjectDir(projectFolder.getRoot())
                 .build()
 
