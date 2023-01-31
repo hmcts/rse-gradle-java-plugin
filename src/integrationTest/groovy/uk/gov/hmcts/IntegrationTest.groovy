@@ -136,7 +136,7 @@ class IntegrationTest extends Specification {
             .forwardOutput()
             .withPluginClasspath()
             .withArguments(arguments)
-            .withGradleVersion("4.10.3")
+            .withGradleVersion("5.0")
             .withProjectDir(projectFolder.getRoot())
     }
 }
