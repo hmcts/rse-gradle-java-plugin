@@ -50,8 +50,8 @@ public final class DependencyCheckSetup {
         // Scan only runtime configurations by default.
         // This can be overridden in project build script if desired.
         extension.getScanConfigurations().add("runtimeClasspath");
-        extension.getFormats().add(Format.XML);
 
+        extension.getFormats().add(Format.XML.name());
         Task cleaner = project.getTasks().create("cleanSuppressions");
         cleaner.dependsOn("dependencyCheckAggregate");
         cleaner.doLast(x -> {
