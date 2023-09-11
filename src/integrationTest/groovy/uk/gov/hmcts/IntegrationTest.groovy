@@ -4,13 +4,12 @@ import com.google.common.collect.Lists
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.lang.TempDir
 
 class IntegrationTest extends Specification {
-    @Rule
-    TemporaryFolder projectFolder = new TemporaryFolder()
+    @TempDir
+    File projectFolder;
     File buildFile
 
     void setup() {

@@ -3,15 +3,13 @@ package uk.gov.hmcts
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
-import uk.gov.hmcts.tools.CheckstyleSetup
+import spock.lang.TempDir
 
 // Test plugin against a complete Java library project.
 class EndToEndTest extends Specification {
-    @Rule
-    TemporaryFolder projectFolder = new TemporaryFolder()
+    @TempDir
+    File projectFolder;
 
     def setup() {
         File testLibrary = new File("test-projects/test-library")
