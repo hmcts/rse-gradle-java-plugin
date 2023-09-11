@@ -43,6 +43,7 @@ gradlePlugin {
             implementationClass = 'uk.gov.hmcts.JavaPlugin'
             displayName = 'HMCTS Java standards plugin'
             description = 'Applies HMCTS Java coding standards'
+            tags.set(['hmcts'])
         }
     }
 }
