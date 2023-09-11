@@ -19,7 +19,7 @@ repositories {
 }
 
 checkstyle {
-    toolVersion '8.32'
+    toolVersion '10.12.3'
 }
 
 dependencies {
