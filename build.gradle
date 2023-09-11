@@ -16,7 +16,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.13.0'
-    testImplementation group: 'com.google.guava', name: 'guava', version: '32.0.1-jre'
+    testImplementation group: 'com.google.guava', name: 'guava', version: '32.1.2-jre'
 
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
 }
