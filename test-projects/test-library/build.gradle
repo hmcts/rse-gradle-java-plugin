@@ -24,7 +24,7 @@ checkstyle {
 
 dependencies {
 
-    implementation 'io.swagger:swagger-annotations:1.6.11'
+    implementation 'io.swagger:swagger-annotations:1.6.12'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13.2'
