@@ -19,7 +19,7 @@ repositories {
 }
 
 checkstyle {
-    toolVersion '10.14.0'
+    toolVersion '10.14.1'
 }
 
 dependencies {
