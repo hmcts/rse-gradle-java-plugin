@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.owasp:dependency-check-gradle:9.0.10'
+    implementation 'org.owasp:dependency-check-gradle:9.1.0'
 
     compileOnly 'org.projectlombok:lombok:1.18.32'
 	annotationProcessor 'org.projectlombok:lombok:1.18.32'
