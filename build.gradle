@@ -2,7 +2,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'groovy'
     id 'com.gradle.plugin-publish' version '1.2.1'
-    id "uk.gov.hmcts.java" version "0.12.61"
+    id "uk.gov.hmcts.java" version "0.12.62"
 }
 
 repositories {
