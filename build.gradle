@@ -2,7 +2,7 @@ plugins {
     id 'java-gradle-plugin'
     id 'groovy'
     id 'com.gradle.plugin-publish' version '1.2.1'
-    id "uk.gov.hmcts.java" version "0.12.63"
+    id "uk.gov.hmcts.java" version "0.12.64"
 }
 
 repositories {
@@ -16,7 +16,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.18.0'
-    testImplementation group: 'com.google.guava', name: 'guava', version: '33.2.1-jre'
+    testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
 
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
 }
