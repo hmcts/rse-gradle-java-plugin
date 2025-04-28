@@ -13,7 +13,7 @@ class IntegrationTest extends Specification {
     File buildFile
 
     void setup() {
-        buildFile = projectFolder.newFile('build.gradle')
+        buildFile = new File(projectFolder, 'build.gradle')
     }
 
     def "Check runs checkstyle against all sourcesets"() {
@@ -94,13 +94,13 @@ class IntegrationTest extends Specification {
 
         then:
         result.output.contains("dependencies were identified with known vulnerabilities")
-        new File(projectFolder.getRoot(), 'build/reports/dependency-check-report.html').exists()
+        new File(projectFolder, 'build/reports/dependency-check-report.html').exists()
     }
 
     def "Dependency check detects vulnerabilities in transient dependencies"() {
         given:
         File testLibrary = new File("test-projects/test-library")
-        FileUtils.copyDirectory(testLibrary, new File(projectFolder.getRoot(), "test-library"))
+        FileUtils.copyDirectory(testLibrary, new File(projectFolder, "test-library"))
         buildFile << """
             plugins {
                 id 'java-library'
@@ -116,7 +116,7 @@ class IntegrationTest extends Specification {
                 compile group: 'org.springframework.cloud', name: 'spring-cloud-cloudfoundry-connector', version: '1.2.9.RELEASE'
             }
         """
-        new File(projectFolder.getRoot(), 'settings.gradle') << """
+        new File(projectFolder, 'settings.gradle') << """
             include 'test-library'
         """
 
@@ -135,7 +135,7 @@ class IntegrationTest extends Specification {
             .forwardOutput()
             .withPluginClasspath()
             .withArguments(arguments)
-            .withGradleVersion("5.0")
-            .withProjectDir(projectFolder.getRoot())
+            .withGradleVersion("8.3")
+            .withProjectDir(projectFolder)
     }
 }

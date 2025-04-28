@@ -17,8 +17,8 @@ dependencies {
 
     testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
-
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+
 }
 
 java {
@@ -79,3 +79,7 @@ ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
 
 // The tests use copies of this build.
 tasks.integrationTest.inputs.files file('test-projects')
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

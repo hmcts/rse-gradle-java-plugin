@@ -13,7 +13,7 @@ class EndToEndTest extends Specification {
 
     def setup() {
         File testLibrary = new File("test-projects/test-library")
-        FileUtils.copyDirectory(testLibrary, projectFolder.getRoot())
+        FileUtils.copyDirectory(testLibrary, projectFolder)
     }
 
     def "All tasks run successfully"() {
@@ -23,7 +23,7 @@ class EndToEndTest extends Specification {
                 .withPluginClasspath()
                 .withArguments("check", "cleanSuppressions", "-is", "assertRepositoriesOrdered")
                 .withGradleVersion(gradleVersion)
-                .withProjectDir(projectFolder.getRoot())
+                .withProjectDir(projectFolder)
                 .build()
 
         then:
@@ -37,8 +37,7 @@ class EndToEndTest extends Specification {
 
         where:
         gradleVersion << [
-               "5.0",
-               "6.0"
+               "8.3"
         ]
     }
 
@@ -49,11 +48,11 @@ class EndToEndTest extends Specification {
                 .withDebug(true)
                 .withPluginClasspath()
                 .withArguments("cleanSuppressions", "-is")
-                .withGradleVersion("5.0")
-                .withProjectDir(projectFolder.getRoot())
+                .withGradleVersion("8.3")
+                .withProjectDir(projectFolder)
                 .build()
 
-        def cleanSuppressions = new File(projectFolder.root, "suppressions.xml")
+        def cleanSuppressions = new File(projectFolder, "suppressions.xml")
         def doc = new XmlSlurper().parse(cleanSuppressions)
 
         then:
