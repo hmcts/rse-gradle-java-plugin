@@ -12,8 +12,6 @@ plugins {
 }
 
 repositories {
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://somewhereelse.io' }
     mavenLocal()
     mavenCentral()
 }
