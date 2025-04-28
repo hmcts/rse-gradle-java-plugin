@@ -12,8 +12,8 @@ repositories {
 dependencies {
     implementation 'org.owasp:dependency-check-gradle:10.0.3'
 
-    compileOnly 'org.projectlombok:lombok:1.18.36'
-	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+	annotationProcessor 'org.projectlombok:lombok:1.18.38'
 
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
     testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
