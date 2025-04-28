@@ -15,8 +15,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.38'
 	annotationProcessor 'org.projectlombok:lombok:1.18.38'
 
+    testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
-    testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.0-jre'
 
     testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
 }
