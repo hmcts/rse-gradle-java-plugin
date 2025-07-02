@@ -8,7 +8,6 @@ import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstyleExtension;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.util.internal.VersionNumber;
 
 import java.io.BufferedWriter;
 import java.io.File;
