@@ -22,7 +22,7 @@ checkstyle {
 
 dependencies {
 
-    implementation 'io.swagger:swagger-annotations:1.6.15'
+    implementation 'io.swagger:swagger-annotations:1.6.16'
 
     // Use JUnit test framework
     testImplementation 'junit:junit:4.13.2'
