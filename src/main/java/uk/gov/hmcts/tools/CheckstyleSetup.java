@@ -1,13 +1,13 @@
 package uk.gov.hmcts.tools;
 
 import lombok.SneakyThrows;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.quality.Checkstyle;
 import org.gradle.api.plugins.quality.CheckstyleExtension;
 import org.gradle.api.plugins.quality.CheckstylePlugin;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.util.VersionNumber;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,7 @@ public class CheckstyleSetup extends DefaultTask {
 
     // Recent checkstyle versions flag an annotation array indentation which is widely used at HMCTS.
     // Consequently we don't force recent versions onto teams (but they may opt in).
-    public static final String minCheckstyleVersion = "8.31";
+    public static final ComparableVersion minCheckstyleVersion = new ComparableVersion("8.31");
 
     public static void apply(Project project) {
         project.getPlugins().apply(CheckstylePlugin.class);
@@ -39,9 +39,9 @@ public class CheckstyleSetup extends DefaultTask {
                 if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
                     // If using bundled checkstyle config, set a floor for checkstyle version since older versions may
                     // not support our bundled config.
-                    if (VersionNumber.parse(minCheckstyleVersion)
-                        .compareTo(VersionNumber.parse(ext.getToolVersion())) > 0) {
-                        ext.setToolVersion(minCheckstyleVersion);
+                    ComparableVersion currentCheckStyleVersion = new ComparableVersion(ext.getToolVersion());
+                    if (minCheckstyleVersion.compareTo(currentCheckStyleVersion) > 0) {
+                        ext.setToolVersion(ext.getToolVersion());
                     }
 
                     checkstyleTask.setConfigFile(writer.configFile);
