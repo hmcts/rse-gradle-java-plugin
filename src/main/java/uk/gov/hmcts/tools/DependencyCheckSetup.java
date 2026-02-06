@@ -39,12 +39,12 @@ public final class DependencyCheckSetup {
 
         Project root = project.getRootProject();
 
-        // Gradle property: -PdependencyCheck.nvd.apiKey=...
-        String apiKey = (String) root.findProperty("dependencyCheck.nvd.apiKey");
+        // Gradle property: -Pnvd.apiKey=...
+        String apiKey = (String) root.findProperty("nvd.apiKey");
 
-        // JVM system property: -DdependencyCheck.nvd.apiKey=...
+        // JVM system property: -Dnvd.apiKey=...
         if (apiKey == null || apiKey.isBlank()) {
-            apiKey = System.getProperty("dependencyCheck.nvd.apiKey");
+            apiKey = System.getProperty("nvd.apiKey");
         }
 
         // Environment variable

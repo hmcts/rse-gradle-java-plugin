@@ -64,7 +64,7 @@ export NVD_API_KEY=YOUR_KEY
 Or via a Gradle property:
 
 ```bash
-./gradlew dependencyCheckAggregate -PdependencyCheck.nvd.apiKey=YOUR_KEY
+./gradlew dependencyCheckAggregate -Pnvd.apiKey=YOUR_KEY
 ```
 
 ### Suppressions
