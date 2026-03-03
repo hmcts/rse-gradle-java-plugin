@@ -13,8 +13,8 @@ repositories {
 dependencies {
     implementation 'org.owasp:dependency-check-gradle:12.2.0'
     implementation 'org.apache.maven:maven-artifact:3.9.10'
-    compileOnly 'org.projectlombok:lombok:1.18.38'
-    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+    compileOnly 'org.projectlombok:lombok:1.18.42'
+    annotationProcessor 'org.projectlombok:lombok:1.18.42'
 
     testImplementation group: 'com.google.guava', name: 'guava', version: '33.5.0-jre'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.19.0'
