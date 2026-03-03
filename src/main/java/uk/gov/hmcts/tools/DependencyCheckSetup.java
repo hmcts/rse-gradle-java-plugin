@@ -36,6 +36,26 @@ public final class DependencyCheckSetup {
         project.getPlugins().apply(DependencyCheckPlugin.class);
 
         DependencyCheckExtension extension = project.getExtensions().getByType(DependencyCheckExtension.class);
+
+        Project root = project.getRootProject();
+
+        // Gradle property: -PdependencyCheck.nvd.apiKey=...
+        String apiKey = (String) root.findProperty("dependencyCheck.nvd.apiKey");
+
+        // JVM system property: -DdependencyCheck.nvd.apiKey=...
+        if (apiKey == null || apiKey.isBlank()) {
+            apiKey = System.getProperty("dependencyCheck.nvd.apiKey");
+        }
+
+        // Environment variable
+        if (apiKey == null || apiKey.isBlank()) {
+            apiKey = System.getenv("NVD_API_KEY");
+        }
+
+        if (apiKey != null && !apiKey.isBlank()) {
+            extension.getNvd().setApiKey(apiKey);
+        }
+
         extension.setFailBuildOnCVSS(0f);
 
         // Match the CNP pipeline which disables these checks

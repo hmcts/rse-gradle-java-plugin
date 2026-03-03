@@ -53,17 +53,29 @@ It only scans runtime configurations by default.  This can be overridden in proj
 
 ### Usage
 
-`./gradlew dependencyCheckAggregate`
+You can request a [NVD API key](https://nvd.nist.gov/developers/request-an-api-key) to improve Dependency Check performance and avoid NVD rate limiting.
+
+It can be provided via an environment variable:
+
+```bash
+export NVD_API_KEY=YOUR_KEY
+```
+
+Or via a Gradle property:
+
+```bash
+./gradlew dependencyCheckAggregate -PPdependencyCheck.nvd.apiKey=YOUR_KEY
+```
 
 ### Suppressions
 
-Due to the way the dependency checker works, false positives are an [expected occurence.](https://jeremylong.github.io/DependencyCheck/general/suppression.html)
+Due to the way the dependency checker works, false positives are an [expected occurrence.](https://jeremylong.github.io/DependencyCheck/general/suppression.html)
 
 Provide the dependency checker with the path to your [suppression file](https://jeremylong.github.io/DependencyCheck/general/suppression.html):
 
 ```groovy
 dependencyCheck {
-  suppressionFile = 'path/to/supression.xml'
+  suppressionFile = 'path/to/suppressions.xml'
 }
 ```
 
