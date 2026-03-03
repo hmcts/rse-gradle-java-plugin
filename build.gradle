@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation 'org.owasp:dependency-check-gradle:12.2.0'
-    implementation 'org.apache.maven:maven-artifact:3.9.10'
+    implementation 'org.apache.maven:maven-artifact:3.9.12'
     compileOnly 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
 
