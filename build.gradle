@@ -19,7 +19,7 @@ dependencies {
     testImplementation group: 'com.google.guava', name: 'guava', version: '33.5.0-jre'
     testImplementation group: 'commons-io', name: 'commons-io', version: '2.21.0'
 
-    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
+    testImplementation 'org.spockframework:spock-core:2.4-groovy-5.0'
 }
 
 java {
