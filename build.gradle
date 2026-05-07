@@ -78,3 +78,16 @@ ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
 
 // The tests use copies of this build.
 tasks.integrationTest.inputs.files file('test-projects')
+
+publishing {
+  repositories {
+    maven {
+      name = "AzureArtifacts"
+      url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
+      credentials {
+        username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
+        password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
+      }
+    }
+  }
+}
