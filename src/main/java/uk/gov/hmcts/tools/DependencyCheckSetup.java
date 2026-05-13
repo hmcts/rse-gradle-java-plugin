@@ -29,6 +29,8 @@ import org.w3c.dom.NodeList;
 
 public final class DependencyCheckSetup {
 
+    private static final String PRODUCTION_RUNTIME_CLASSPATH = "productionRuntimeClasspath";
+
     private DependencyCheckSetup() {
     }
 
@@ -69,7 +71,7 @@ public final class DependencyCheckSetup {
 
         // Scan only runtime configurations by default.
         // This can be overridden in project build script if desired.
-        extension.getScanConfigurations().add("runtimeClasspath");
+        extension.getScanConfigurations().add(PRODUCTION_RUNTIME_CLASSPATH);
 
         extension.getFormats().add(Format.XML.name());
         Task cleaner = project.getTasks().create("cleanSuppressions");

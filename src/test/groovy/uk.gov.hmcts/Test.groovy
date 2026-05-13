@@ -1,9 +1,25 @@
 package uk.gov.hmcts
 
+import org.gradle.testfixtures.ProjectBuilder
+import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import spock.lang.Specification
+import uk.gov.hmcts.JavaPlugin
 import uk.gov.hmcts.tools.DependencyCheckSetup
 
 class Test extends Specification {
+
+    def "configures dependency check to scan production runtime classpath"() {
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.plugins.apply(JavaPlugin)
+        def extension = project.extensions.getByType(DependencyCheckExtension)
+
+        then:
+        extension.scanConfigurations.get() == ["productionRuntimeClasspath"]
+        extension.skipTestGroups.get()
+    }
 
     def "extracts set of CVEs from suppression report"() {
         given:
