@@ -31,22 +31,22 @@ public class CheckstyleSetup extends DefaultTask {
         ext.setMaxErrors(0);
         ext.setIgnoreFailures(false);
 
-        project.afterEvaluate(evaluatedProject -> {
-            CheckstyleSetup writer = project.getTasks().create("writeCheckstyleConfig",
-                CheckstyleSetup.class);
+        TaskProvider<CheckstyleSetup> writer = project.getTasks().register(
+                "writeCheckstyleConfig",
+                CheckstyleSetup.class
+        );
 
-            for (Checkstyle checkstyleTask : project.getTasks().withType(Checkstyle.class)) {
-                if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
-                    // If using bundled checkstyle config, set a floor for checkstyle version since older versions may
-                    // not support our bundled config.
-                    ComparableVersion currentCheckStyleVersion = new ComparableVersion(ext.getToolVersion());
-                    if (minCheckstyleVersion.compareTo(currentCheckStyleVersion) > 0) {
-                        ext.setToolVersion(ext.getToolVersion());
-                    }
-
-                    checkstyleTask.setConfigFile(writer.configFile);
-                    checkstyleTask.dependsOn(writer);
+        project.getTasks().withType(Checkstyle.class).configureEach(checkstyleTask -> {
+            if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
+                ComparableVersion currentCheckStyleVersion = new ComparableVersion(ext.getToolVersion());
+                // If using bundled checkstyle config, set a floor for checkstyle version since older versions may
+                // not support our bundled config.
+                if (minCheckstyleVersion.compareTo(currentCheckStyleVersion) > 0) {
+                    ext.setToolVersion(minCheckstyleVersion.toString());
                 }
+
+                checkstyleTask.setConfigFile(writer.get().getConfigFile());
+                checkstyleTask.dependsOn(writer);
             }
         });
     }
