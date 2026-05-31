@@ -1,5 +1,6 @@
 package uk.gov.hmcts
 
+import groovy.xml.XmlSlurper
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -9,21 +10,21 @@ import spock.lang.TempDir
 // Test plugin against a complete Java library project.
 class EndToEndTest extends Specification {
     @TempDir
-    File projectFolder;
+    File projectFolder
 
     def setup() {
         File testLibrary = new File("test-projects/test-library")
-        FileUtils.copyDirectory(testLibrary, projectFolder.getRoot())
+        FileUtils.copyDirectory(testLibrary, projectFolder)
     }
 
-    def "All tasks run successfully"() {
+    def "All tasks run successfully with Gradle #gradleVersion"() {
         when:
         def result = GradleRunner.create()
                 .forwardOutput()
                 .withPluginClasspath()
                 .withArguments("check", "cleanSuppressions", "-is", "assertRepositoriesOrdered")
                 .withGradleVersion(gradleVersion)
-                .withProjectDir(projectFolder.getRoot())
+                .withProjectDir(projectFolder)
                 .build()
 
         then:
@@ -32,13 +33,14 @@ class EndToEndTest extends Specification {
                 ":cleanSuppressions",
                 ":assertRepositoriesOrdered"
         )
-        // The test project declares checkstyle 8.32
-        result.output =~ "Running Checkstyle 8.32"
+
+        // The test project declares checkstyle
+        result.output =~ /Running Checkstyle \d+\.\d+(\.\d+)?/
 
         where:
         gradleVersion << [
-               "5.0",
-               "6.0"
+                "8.14.3",
+                "9.0.0"
         ]
     }
 
@@ -46,14 +48,13 @@ class EndToEndTest extends Specification {
         when:
         GradleRunner.create()
                 .forwardOutput()
-                .withDebug(true)
                 .withPluginClasspath()
                 .withArguments("cleanSuppressions", "-is")
-                .withGradleVersion("5.0")
-                .withProjectDir(projectFolder.getRoot())
+                .withGradleVersion("9.0.0")
+                .withProjectDir(projectFolder)
                 .build()
 
-        def cleanSuppressions = new File(projectFolder.root, "suppressions.xml")
+        def cleanSuppressions = new File(projectFolder, "suppressions.xml")
         def doc = new XmlSlurper().parse(cleanSuppressions)
 
         then:

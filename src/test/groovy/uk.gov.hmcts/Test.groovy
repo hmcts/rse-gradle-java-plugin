@@ -48,7 +48,7 @@ class Test extends Specification {
         ]
         when:
         String report = DependencyCheckSetup.stripUnusedSuppressions(xml, cves)
-        def suppressions = new groovy.util.XmlParser().parseText(report)
+        def suppressions = new groovy.xml.XmlParser().parseText(report)
 
         then:
         // See the suppressions file which has 5 suppressions referencing CVE-2018-1258.
