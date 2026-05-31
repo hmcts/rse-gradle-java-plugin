@@ -109,12 +109,16 @@ public final class DependencyCheckSetup {
     public static Set<String> getSuppressedCves(String dependencyCheckerReport) {
         GPathResult response = new XmlSlurper().parseText(dependencyCheckerReport);
         Set<String> result = new HashSet<>();
-        response.depthFirst().forEachRemaining(x -> {
-            NodeChild n = (NodeChild) x;
-            if (n.name().equals("suppressedVulnerability")) {
+
+        Iterator<?> iterator = response.depthFirst();
+        while (iterator.hasNext()) {
+            Object x = iterator.next();
+
+            if (x instanceof NodeChild n && n.name().equals("suppressedVulnerability")) {
                 result.add(n.getProperty("name").toString());
             }
-        });
+        }
+
         return result;
     }
 
@@ -130,7 +134,7 @@ public final class DependencyCheckSetup {
             xpathExp.evaluate(suppressions, XPathConstants.NODESET);
         for (int i = 0; i < cves.getLength(); i++) {
             Node cve = cves.item(i);
-            if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
+            if (usedCves.stream().noneMatch(c -> cve.getTextContent().contains(c))) {
                 cve.getParentNode().removeChild(cve);
             }
         }
@@ -139,10 +143,9 @@ public final class DependencyCheckSetup {
         for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
             Node n = suppressions.getChildNodes().item(t);
             // Remove the whole node if it has no reference to active CVEs.
-            if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
+            if (usedCves.stream().noneMatch(c -> n.getTextContent().contains(c))) {
                 suppressions.removeChild(n);
                 t--;
-                continue;
             }
         }
 
