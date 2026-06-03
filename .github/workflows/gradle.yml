@@ -14,6 +14,16 @@ jobs:
       with:
         java-version: 17
         distribution: 'temurin'
+        cache: gradle
+    - name: Cache dependency-check data
+      uses: actions/cache@v5
+      with:
+        path: |
+          ~/.gradle/dependency-check-data
+          build/tmp/integrationTest/work/.gradle-test-kit/dependency-check-data
+        key: dependency-check-${{ runner.os }}-${{ hashFiles('build.gradle', 'gradle/wrapper/gradle-wrapper.properties') }}
+        restore-keys: |
+          dependency-check-${{ runner.os }}-
     - name: Build
       env:
         NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
