@@ -1,7 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
     id 'groovy'
-    id 'com.gradle.plugin-publish' version '1.3.1'
+    id 'maven-publish'
     id "uk.gov.hmcts.java" version "0.12.70"
 }
 
@@ -11,9 +11,8 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.apache.maven:maven-artifact:3.9.12'
-    implementation 'org.owasp:dependency-check-gradle:12.2.2'
     implementation 'org.apache.maven:maven-artifact:3.9.16'
+    implementation 'org.owasp:dependency-check-gradle:12.2.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.46'
     annotationProcessor 'org.projectlombok:lombok:1.18.46'
@@ -37,14 +36,12 @@ group = 'uk.gov.hmcts.reform'
 project.version = System.getenv("RELEASE_VERSION")?.replace("refs/tags/", "") ?: "DEV-SNAPSHOT"
 
 gradlePlugin {
-    // Define the plugin
     plugins {
-        greeting {
+        hmctsJava {
             id = 'uk.gov.hmcts.java'
             implementationClass = 'uk.gov.hmcts.JavaPlugin'
             displayName = 'HMCTS Java standards plugin'
             description = 'Applies HMCTS Java coding standards'
-            tags.set(['hmcts'])
         }
     }
 }
@@ -75,26 +72,18 @@ check {
     dependsOn(tasks.integrationTest)
 }
 
-gradlePlugin {
-    website = 'https://github.com/hmcts/gradle-java-plugin'
-    vcsUrl = 'https://github.com/hmcts/gradle-java-plugin'
-}
-
-ext['gradle.publish.key'] = System.getenv('GRADLE_PLUGIN_PORTAL_KEY')
-ext['gradle.publish.secret'] = System.getenv('GRADLE_PLUGIN_PORTAL_SECRET')
-
 // The tests use copies of this build.
 tasks.integrationTest.inputs.files file('test-projects')
 
 publishing {
-  repositories {
-    maven {
-      name = "AzureArtifacts"
-      url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
-      credentials {
-        username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
-        password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
-      }
+    repositories {
+        maven {
+            name = "AzureArtifacts"
+            url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
+            credentials {
+                username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
+                password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
+            }
+        }
     }
-  }
 }
