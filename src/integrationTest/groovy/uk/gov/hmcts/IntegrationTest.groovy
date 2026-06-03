@@ -8,6 +8,11 @@ import spock.lang.Specification
 import spock.lang.TempDir
 
 class IntegrationTest extends Specification {
+    private static final String GRADLE_PROPERTIES = """\
+        org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m
+        org.gradle.workers.max=1
+    """.stripIndent()
+
     @TempDir
     File projectFolder
 
@@ -17,6 +22,7 @@ class IntegrationTest extends Specification {
     void setup() {
         buildFile = new File(projectFolder, "build.gradle")
         settingsFile = new File(projectFolder, "settings.gradle")
+        new File(projectFolder, "gradle.properties").text = GRADLE_PROPERTIES
     }
 
     def "Check runs checkstyle against all sourcesets"() {
