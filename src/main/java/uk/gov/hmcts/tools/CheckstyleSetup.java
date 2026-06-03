@@ -12,12 +12,12 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.TaskProvider;
 import org.gradle.work.DisableCachingByDefault;
 
+import javax.inject.Inject;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.Scanner;
-import javax.inject.Inject;
 
 @DisableCachingByDefault(because = "Writes a generated Checkstyle configuration file from bundled plugin resources")
 public class CheckstyleSetup extends DefaultTask {
@@ -41,19 +41,22 @@ public class CheckstyleSetup extends DefaultTask {
                 CheckstyleSetup.class
         );
 
-        project.getTasks().withType(Checkstyle.class).configureEach(checkstyleTask -> {
-            if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
-                ComparableVersion currentCheckStyleVersion = new ComparableVersion(ext.getToolVersion());
-                // If using bundled checkstyle config, set a floor for checkstyle version since older versions may
-                // not support our bundled config.
-                if (minCheckstyleVersion.compareTo(currentCheckStyleVersion) > 0) {
-                    ext.setToolVersion(minCheckstyleVersion.toString());
-                }
+        project.afterEvaluate(evaluatedProject ->
+                evaluatedProject.getTasks().withType(Checkstyle.class).configureEach(checkstyleTask -> {
+                    if (checkstyleTask.getConfigFile() == null || !checkstyleTask.getConfigFile().exists()) {
+                        ComparableVersion currentCheckStyleVersion = new ComparableVersion(ext.getToolVersion());
 
-                checkstyleTask.setConfigFile(writer.get().getConfigFile());
-                checkstyleTask.dependsOn(writer);
-            }
-        });
+                        // If using bundled checkstyle config, set a floor for checkstyle version since older versions
+                        // may not support our bundled config.
+                        if (minCheckstyleVersion.compareTo(currentCheckStyleVersion) > 0) {
+                            ext.setToolVersion(minCheckstyleVersion.toString());
+                        }
+
+                        checkstyleTask.setConfigFile(writer.get().getConfigFile());
+                        checkstyleTask.dependsOn(writer);
+                    }
+                })
+        );
     }
 
     @Inject
