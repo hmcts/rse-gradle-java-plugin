@@ -1,18 +1,5 @@
 package uk.gov.hmcts.tools;
 
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import groovy.xml.DOMBuilder;
 import groovy.xml.XmlSlurper;
 import groovy.xml.XmlUtil;
@@ -28,6 +15,19 @@ import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public final class DependencyCheckSetup {
 

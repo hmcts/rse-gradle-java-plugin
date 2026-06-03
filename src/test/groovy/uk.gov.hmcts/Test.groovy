@@ -3,7 +3,6 @@ package uk.gov.hmcts
 import org.gradle.testfixtures.ProjectBuilder
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import spock.lang.Specification
-import uk.gov.hmcts.JavaPlugin
 import uk.gov.hmcts.tools.DependencyCheckSetup
 
 class Test extends Specification {
