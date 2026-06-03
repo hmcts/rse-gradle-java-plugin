@@ -1,6 +1,5 @@
 package uk.gov.hmcts
 
-import com.google.common.collect.Lists
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -140,7 +139,7 @@ class IntegrationTest extends Specification {
     }
 
     GradleRunner runner(String... args) {
-        ArrayList<String> arguments = Lists.newArrayList(args)
+        List<String> arguments = new ArrayList<>(args as List)
         arguments.add("--info")
         arguments.add("--stacktrace")
 
