@@ -3,23 +3,30 @@ name: Java CI
 on:
   pull_request:
   push:
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v5
-      with:
-        java-version: 17
-        distribution: 'temurin'
-    - name: Build
-      run: ./gradlew check -i
-    - name: Release
-      env:
-        GRADLE_PLUGIN_PORTAL_KEY: ${{ secrets.GRADLE_PLUGIN_PORTAL_KEY }}
-        GRADLE_PLUGIN_PORTAL_SECRET: ${{ secrets.GRADLE_PLUGIN_PORTAL_SECRET }}
-        RELEASE_VERSION: ${{ github.ref }}
-      run: ./gradlew publishPlugins
-      if: startsWith(github.ref, 'refs/tags')
+      - uses: actions/checkout@v6
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: gradle
+      - name: Cache dependency-check data
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/dependency-check-data
+            build/tmp/integrationTest/work/.gradle-test-kit/dependency-check-data
+          key: dependency-check-${{ runner.os }}-${{ hashFiles('build.gradle', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            dependency-check-${{ runner.os }}-
+      - name: Build
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+        run: ./gradlew check -i

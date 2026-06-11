@@ -3,7 +3,6 @@ package uk.gov.hmcts
 import org.gradle.testfixtures.ProjectBuilder
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import spock.lang.Specification
-import uk.gov.hmcts.JavaPlugin
 import uk.gov.hmcts.tools.DependencyCheckSetup
 
 class Test extends Specification {
@@ -48,7 +47,7 @@ class Test extends Specification {
         ]
         when:
         String report = DependencyCheckSetup.stripUnusedSuppressions(xml, cves)
-        def suppressions = new groovy.util.XmlParser().parseText(report)
+        def suppressions = new groovy.xml.XmlParser().parseText(report)
 
         then:
         // See the suppressions file which has 5 suppressions referencing CVE-2018-1258.

@@ -1,5 +1,21 @@
 package uk.gov.hmcts.tools;
 
+import groovy.xml.DOMBuilder;
+import groovy.xml.XmlSlurper;
+import groovy.xml.XmlUtil;
+import groovy.xml.slurpersupport.GPathResult;
+import groovy.xml.slurpersupport.NodeChild;
+import lombok.SneakyThrows;
+import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.plugins.JavaPlugin;
+import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
+import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
+import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
@@ -10,22 +26,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
-
-import groovy.util.XmlSlurper;
-import groovy.util.slurpersupport.GPathResult;
-import groovy.util.slurpersupport.NodeChild;
-import groovy.xml.DOMBuilder;
-import groovy.xml.XmlUtil;
-import lombok.SneakyThrows;
-import org.gradle.api.Project;
-import org.gradle.api.Task;
-import org.owasp.dependencycheck.gradle.DependencyCheckPlugin;
-import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension;
-import org.owasp.dependencycheck.reporting.ReportGenerator.Format;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public final class DependencyCheckSetup {
 
@@ -70,19 +72,36 @@ public final class DependencyCheckSetup {
 
 
         // Scan only runtime configurations by default.
+        project.getPlugins().withType(JavaPlugin.class, javaPlugin -> {
+            Configuration runtimeClasspath = project.getConfigurations()
+                    .getByName(JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME);
+
+            Configuration productionRuntimeClasspath = project.getConfigurations()
+                    .maybeCreate(PRODUCTION_RUNTIME_CLASSPATH);
+
+            productionRuntimeClasspath.setCanBeConsumed(false);
+            productionRuntimeClasspath.setCanBeResolved(true);
+            productionRuntimeClasspath.extendsFrom(runtimeClasspath);
+        });
+
         // This can be overridden in project build script if desired.
         extension.getScanConfigurations().add(PRODUCTION_RUNTIME_CLASSPATH);
 
         extension.getFormats().add(Format.XML.name());
-        Task cleaner = project.getTasks().create("cleanSuppressions");
-        cleaner.dependsOn("dependencyCheckAggregate");
-        cleaner.doLast(x -> {
-            File reportDir = project.file(extension.getOutputDirectory());
-            File report = new File(reportDir, "dependency-check-report.xml");
-            Set<String> cves = getSuppressedCves(readFile(report));
-            File suppressions = project.file(extension.getSuppressionFile());
-            String cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
-            writeFile(suppressions, cleanedReport);
+        project.getTasks().register("cleanSuppressions", cleaner -> {
+            cleaner.dependsOn("dependencyCheckAggregate");
+
+            cleaner.doLast(task -> {
+                File reportDir = project.file(extension.getOutputDirectory());
+                File report = new File(reportDir, "dependency-check-report.xml");
+
+                Set<String> cves = getSuppressedCves(readFile(report));
+
+                File suppressions = project.file(extension.getSuppressionFile());
+                String cleanedReport = stripUnusedSuppressions(readFile(suppressions), cves);
+
+                writeFile(suppressions, cleanedReport);
+            });
         });
     }
 
@@ -90,12 +109,16 @@ public final class DependencyCheckSetup {
     public static Set<String> getSuppressedCves(String dependencyCheckerReport) {
         GPathResult response = new XmlSlurper().parseText(dependencyCheckerReport);
         Set<String> result = new HashSet<>();
-        response.depthFirst().forEachRemaining(x -> {
-            NodeChild n = (NodeChild) x;
-            if (n.name().equals("suppressedVulnerability")) {
+
+        Iterator<?> iterator = response.depthFirst();
+        while (iterator.hasNext()) {
+            Object x = iterator.next();
+
+            if (x instanceof NodeChild n && n.name().equals("suppressedVulnerability")) {
                 result.add(n.getProperty("name").toString());
             }
-        });
+        }
+
         return result;
     }
 
@@ -111,7 +134,7 @@ public final class DependencyCheckSetup {
             xpathExp.evaluate(suppressions, XPathConstants.NODESET);
         for (int i = 0; i < cves.getLength(); i++) {
             Node cve = cves.item(i);
-            if (!usedCves.stream().anyMatch(c -> cve.getTextContent().contains(c))) {
+            if (usedCves.stream().noneMatch(c -> cve.getTextContent().contains(c))) {
                 cve.getParentNode().removeChild(cve);
             }
         }
@@ -120,10 +143,9 @@ public final class DependencyCheckSetup {
         for (int t = 0; t < suppressions.getChildNodes().getLength(); t++) {
             Node n = suppressions.getChildNodes().item(t);
             // Remove the whole node if it has no reference to active CVEs.
-            if (!usedCves.stream().anyMatch(c -> n.getTextContent().contains(c))) {
+            if (usedCves.stream().noneMatch(c -> n.getTextContent().contains(c))) {
                 suppressions.removeChild(n);
                 t--;
-                continue;
             }
         }
 
